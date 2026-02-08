@@ -1,35 +1,45 @@
 <% content_for :title, "ログイン" %>
 
-<div class="login-container">
-  <h1>賃貸管理システム</h1>
-  <p>ログインしてください</p>
+<div class="login-page">
+  <div class="login-card">
+    <h1>賃貸管理システム</h1>
+    <p class="login-subtitle">ログインしてください</p>
 
-  <% if flash[:alert] %>
-    <div class="error-messages"><p><%= flash[:alert] %></p></div>
-  <% end %>
-
-  <div class="login-buttons">
-    <% if ENV["ENTRA_CLIENT_ID"].present? %>
-      <%= form_with url: "/auth/entra_id", method: :post, data: { turbo: false } do %>
-        <%= submit_tag "Microsoft でログイン", class: "btn btn-primary btn-login" %>
-      <% end %>
+    <% if flash[:alert] %>
+      <div class="error-messages"><p><%= flash[:alert] %></p></div>
     <% end %>
 
-    <% if ENV["GOOGLE_CLIENT_ID"].present? %>
-      <%= form_with url: "/auth/google_oauth2", method: :post, data: { turbo: false } do %>
-        <%= submit_tag "Google でログイン", class: "btn btn-login btn-google" %>
+    <% if ENV["ENTRA_CLIENT_ID"].present? || ENV["GOOGLE_CLIENT_ID"].present? %>
+      <div class="login-sso">
+        <% if ENV["ENTRA_CLIENT_ID"].present? %>
+          <%= form_with url: "/auth/entra_id", method: :post, data: { turbo: false } do %>
+            <%= submit_tag "Microsoft でログイン", class: "btn-login btn-microsoft" %>
+          <% end %>
+        <% end %>
+
+        <% if ENV["GOOGLE_CLIENT_ID"].present? %>
+          <%= form_with url: "/auth/google_oauth2", method: :post, data: { turbo: false } do %>
+            <%= submit_tag "Google でログイン", class: "btn-login btn-google" %>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if Rails.env.local? %>
+      <% if ENV["ENTRA_CLIENT_ID"].present? || ENV["GOOGLE_CLIENT_ID"].present? %>
+        <div class="login-divider">開発用ログイン</div>
       <% end %>
+      <div class="login-dev">
+        <% unless ENV["ENTRA_CLIENT_ID"].present? || ENV["GOOGLE_CLIENT_ID"].present? %>
+          <h3>開発用ログイン</h3>
+        <% end %>
+        <% User.order(:role).each do |user| %>
+          <%= form_with url: login_as_path, method: :post, data: { turbo: false } do |f| %>
+            <%= f.hidden_field :user_id, value: user.id %>
+            <%= f.submit "#{user.name}（#{user.role_label}）としてログイン", class: "btn-dev" %>
+          <% end %>
+        <% end %>
+      </div>
     <% end %>
   </div>
-
-  <% if Rails.env.local? %>
-    <hr>
-    <h3>開発用ログイン</h3>
-    <% User.order(:role).each do |user| %>
-      <%= form_with url: login_as_path, method: :post, data: { turbo: false } do |f| %>
-        <%= f.hidden_field :user_id, value: user.id %>
-        <%= f.submit "#{user.name}（#{user.role_label}）としてログイン", class: "btn btn-dev" %>
-      <% end %>
-    <% end %>
-  <% end %>
 </div>

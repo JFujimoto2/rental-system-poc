@@ -1,8 +1,9 @@
 <% content_for :title, "建物一覧" %>
 
-<p class="notice"><%= notice %></p>
-
-<h1>建物一覧</h1>
+<div class="page-header">
+  <h1>建物一覧</h1>
+  <%= link_to "新規建物登録", new_building_path, class: "btn btn-primary" %>
+</div>
 
 <table>
   <thead>
@@ -37,5 +38,3 @@
     <% end %>
   </tbody>
 </table>
-
-<%= link_to "新規建物登録", new_building_path, class: "btn btn-primary" %>

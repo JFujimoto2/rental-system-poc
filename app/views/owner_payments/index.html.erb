@@ -1,8 +1,9 @@
 <% content_for :title, "オーナー支払一覧" %>
 
-<p class="notice"><%= notice %></p>
-
-<h1>オーナー支払一覧</h1>
+<div class="page-header">
+  <h1>オーナー支払一覧</h1>
+  <%= link_to "新規オーナー支払登録", new_owner_payment_path, class: "btn btn-primary" %>
+</div>
 
 <table>
   <thead>
@@ -35,5 +36,3 @@
     <% end %>
   </tbody>
 </table>
-
-<%= link_to "新規オーナー支払登録", new_owner_payment_path, class: "btn btn-primary" %>

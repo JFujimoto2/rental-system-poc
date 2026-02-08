@@ -1,8 +1,9 @@
 <% content_for :title, "入居者一覧" %>
 
-<p class="notice"><%= notice %></p>
-
-<h1>入居者一覧</h1>
+<div class="page-header">
+  <h1>入居者一覧</h1>
+  <%= link_to "新規入居者登録", new_tenant_path, class: "btn btn-primary" %>
+</div>
 
 <table>
   <thead>
@@ -28,5 +29,3 @@
     <% end %>
   </tbody>
 </table>
-
-<%= link_to "新規入居者登録", new_tenant_path, class: "btn btn-primary" %>

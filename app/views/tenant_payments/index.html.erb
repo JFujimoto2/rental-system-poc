@@ -1,8 +1,9 @@
 <% content_for :title, "テナント入金一覧" %>
 
-<p class="notice"><%= notice %></p>
-
-<h1>テナント入金一覧</h1>
+<div class="page-header">
+  <h1>テナント入金一覧</h1>
+  <%= link_to "新規入金登録", new_tenant_payment_path, class: "btn btn-primary" %>
+</div>
 
 <table>
   <thead>
@@ -35,5 +36,3 @@
     <% end %>
   </tbody>
 </table>
-
-<%= link_to "新規入金登録", new_tenant_payment_path, class: "btn btn-primary" %>
