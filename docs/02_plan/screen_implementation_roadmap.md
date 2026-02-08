@@ -5,49 +5,82 @@
 物件管理 CRUD を起点に、コア業務画面を段階的に実装していく計画。
 各ステップは前ステップのモデルに依存するため、順番に進める。
 
+サブリースの二重契約構造（マスターリース＋転貸借）を中心に設計しつつ、
+管理委託・自社物件など他の契約形態にも対応できる構造とする。
+
 ## 実装順序
 
 ### Step 1: 物件管理（建物・部屋）CRUD — 完了
 
 - Building / Room の CRUD 画面
-- 詳細は `docs/02_plan/building_room_crud_plan.md` を参照
+- 詳細は `docs/06_features/01_building_room.md` を参照
 
-### Step 2: オーナー（支払先）管理
+### Step 2: オーナー（支払先）管理 — 完了
 
-物件のオーナー情報を管理する。契約系画面の前提となるマスタ。
+- Owner の CRUD 画面（基本情報・口座情報）
+- Building との紐づけ
+- 詳細は `docs/06_features/02_owner.md` を参照
+
+### Step 3: マスターリース契約（オーナー契約）
+
+オーナーと自社間のマスターリース契約を管理する。
+サブリースの根幹となる契約で、保証賃料・免責期間・賃料改定を含む。
 
 #### データモデル（想定）
 
+**MasterLease（マスターリース契約）**
+
 | カラム | 型 | 説明 |
 |--------|------|------|
-| name | string | オーナー名（必須） |
-| name_kana | string | オーナー名カナ |
-| phone | string | 電話番号 |
-| email | string | メールアドレス |
-| postal_code | string | 郵便番号 |
-| address | string | 住所 |
-| bank_name | string | 銀行名 |
-| bank_branch | string | 支店名 |
-| account_type | string | 口座種別（普通/当座） |
-| account_number | string | 口座番号 |
-| account_holder | string | 口座名義 |
+| owner | references | オーナー（必須） |
+| building | references | 建物（必須） |
+| contract_type | string | 契約形態（sublease: サブリース / management: 管理委託 / own: 自社物件） |
+| start_date | date | 契約開始日（必須） |
+| end_date | date | 契約終了日 |
+| guaranteed_rent | integer | 保証賃料（月額・サブリース時） |
+| management_fee_rate | decimal | 管理手数料率（管理委託時、例: 5%） |
+| rent_review_cycle | integer | 賃料改定周期（月数、例: 24） |
+| status | integer | 状態（契約中/解約予定/解約済） |
 | notes | text | 備考 |
+
+**ExemptionPeriod（免責期間）**
+
+| カラム | 型 | 説明 |
+|--------|------|------|
+| master_lease | references | マスターリース契約（必須） |
+| room | references | 部屋（null可、建物全体の場合はnull） |
+| start_date | date | 免責開始日（必須） |
+| end_date | date | 免責終了日（必須） |
+| reason | string | 事由（新築/退去後/大規模修繕 等） |
+
+**RentRevision（賃料改定履歴）**
+
+| カラム | 型 | 説明 |
+|--------|------|------|
+| master_lease | references | マスターリース契約（必須） |
+| revision_date | date | 改定日（必須） |
+| old_rent | integer | 改定前保証賃料 |
+| new_rent | integer | 改定後保証賃料 |
+| notes | text | 改定理由・交渉メモ |
 
 #### 関連
 
-- Owner `has_many :buildings`
-- Building `belongs_to :owner`（owner_id カラム追加）
+- Owner `has_many :master_leases`
+- Building `has_many :master_leases`
+- MasterLease `belongs_to :owner`, `belongs_to :building`
+- MasterLease `has_many :exemption_periods`, `has_many :rent_revisions`
 
 #### 実装内容
 
-- Owner の scaffold + CRUD 画面（日本語化）
-- Building に owner_id を追加するマイグレーション
-- Building フォームにオーナー選択セレクトボックスを追加
-- Owner 詳細画面に所有建物一覧を表示
+- MasterLease の CRUD 画面
+- 契約形態（サブリース/管理委託/自社物件）の選択に応じてフォーム項目を切り替え
+- Owner 詳細画面にマスターリース契約一覧を表示
+- Building 詳細画面に契約情報を表示
+- 免責期間・賃料改定履歴の管理画面（マスターリース詳細内に組み込み）
 
-### Step 3: エンド契約（入居者契約）
+### Step 4: 入居者・転貸借契約（エンド契約）
 
-入居者と部屋の契約情報を管理する。賃貸管理のコア業務。
+入居者と部屋の転貸借契約を管理する。サブリース時は自社が貸主となる。
 
 #### データモデル（想定）
 
@@ -64,17 +97,18 @@
 | emergency_contact | string | 緊急連絡先 |
 | notes | text | 備考 |
 
-**Contract（契約）**
+**Contract（転貸借契約/エンド契約）**
 
 | カラム | 型 | 説明 |
 |--------|------|------|
 | room | references | 部屋（必須） |
 | tenant | references | 入居者（必須） |
-| contract_type | string | 契約種別（普通借家/定期借家） |
+| master_lease | references | マスターリース契約（紐づけ） |
+| lease_type | string | 借家種別（ordinary: 普通借家 / fixed_term: 定期借家） |
 | start_date | date | 契約開始日（必須） |
 | end_date | date | 契約終了日 |
-| rent | integer | 月額賃料 |
-| management_fee | integer | 管理費 |
+| rent | integer | 月額賃料（転貸賃料） |
+| management_fee | integer | 管理費（共益費） |
 | deposit | integer | 敷金 |
 | key_money | integer | 礼金 |
 | renewal_fee | integer | 更新料 |
@@ -84,28 +118,30 @@
 #### 関連
 
 - Tenant `has_many :contracts`
-- Contract `belongs_to :room`, `belongs_to :tenant`
+- Contract `belongs_to :room`, `belongs_to :tenant`, `belongs_to :master_lease`（optional）
 - Room `has_many :contracts`
+- MasterLease `has_many :contracts`（1つのマスターリースに対し、複数部屋の転貸借契約が紐づく）
 - 契約作成時に Room の status を連動更新（空室→入居中 等）
 
 #### 実装内容
 
-- Tenant / Contract の CRUD 画面
+- Tenant の CRUD 画面
+- Contract の CRUD 画面（マスターリース契約との紐づけ選択）
 - Room 詳細画面に契約履歴を表示
 - 契約ステータス変更時の Room ステータス連動
 - Building 詳細画面で各部屋の契約状況を一覧表示
 
-### Step 4: 入金予定・消込
+### Step 5: 入出金管理
 
-契約から月次の入金予定を生成し、入金消込を行う。PoC 計画「4.6 アプラス結果取り込み・消込」の基盤。
+入居者からの入金（転貸賃料）とオーナーへの支払（保証賃料）の両方を管理する。
 
 #### データモデル（想定）
 
-**Payment（入金予定/実績）**
+**TenantPayment（入居者入金）**
 
 | カラム | 型 | 説明 |
 |--------|------|------|
-| contract | references | 契約（必須） |
+| contract | references | 転貸借契約（必須） |
 | due_date | date | 入金予定日（必須） |
 | amount | integer | 予定金額 |
 | paid_amount | integer | 入金額 |
@@ -114,14 +150,30 @@
 | payment_method | string | 入金方法（振込/口座振替/現金） |
 | notes | text | 備考 |
 
+**OwnerPayment（オーナー支払）**
+
+| カラム | 型 | 説明 |
+|--------|------|------|
+| master_lease | references | マスターリース契約（必須） |
+| target_month | date | 対象年月（必須） |
+| guaranteed_amount | integer | 保証賃料 |
+| deduction | integer | 控除額（修繕費等） |
+| net_amount | integer | 差引支払額 |
+| status | integer | 状態（未払/支払済） |
+| paid_date | date | 支払日 |
+| notes | text | 備考 |
+
 #### 実装内容
 
-- 契約から入金予定を一括生成する Service クラス
+- 転貸借契約から入金予定を一括生成する Service クラス
+- マスターリース契約からオーナー支払予定を一括生成する Service クラス
 - 入金予定一覧画面（月別フィルタ）
 - 入金消込画面（個別消込）
+- オーナー支払一覧・支払処理画面
 - 滞納一覧の表示
+- 物件単位の収支サマリ（転貸収入 − 保証賃料 − 管理コスト）
 
-### Step 5: Excel インポート
+### Step 6: Excel インポート
 
 PoC 計画「4.2 Excel インポート機能」の検証。物件や契約データの一括取込。
 
@@ -135,11 +187,35 @@ PoC 計画「4.2 Excel インポート機能」の検証。物件や契約デー
 ## 全体の関連図
 
 ```
-Owner ─── 1:N ─── Building ─── 1:N ─── Room ─── 1:N ─── Contract ─── 1:N ─── Payment
-                                                           │
-                                                           N:1
-                                                           │
-                                                         Tenant
+                    ┌── ExemptionPeriod
+                    │
+Owner 1──N MasterLease 1──N RentRevision
+                │
+                │ N──1 Building 1──N Room
+                │                    │
+                │                    1──N Contract 1──N TenantPayment
+                │                           │
+                1──N OwnerPayment            N──1 Tenant
+                    （保証賃料支払）            （入居者）
+```
+
+### 契約形態別の構造
+
+**サブリースの場合:**
+```
+Owner ──[MasterLease]──> 自社 ──[Contract]──> Tenant
+        保証賃料              転貸賃料
+```
+
+**管理委託の場合:**
+```
+Owner ──[MasterLease(management)]──> 自社（管理受託）
+Room ──[Contract]──> Tenant（オーナーと入居者の直接契約を代行管理）
+```
+
+**自社物件の場合:**
+```
+自社所有（Owner不要） ──[MasterLease(own)]──> Room ──[Contract]──> Tenant
 ```
 
 ## 備考
@@ -147,3 +223,4 @@ Owner ─── 1:N ─── Building ─── 1:N ─── Room ─── 1:
 - 各ステップは TDD（テスト駆動開発）で進める
 - Step ごとに PR を作成し、CI 通過を確認してからマージする
 - データモデルは実装時に現行システムの調査結果と照合し、必要に応じて調整する
+- サブリースの業務詳細は `docs/01_investigation/sublease_business_overview.md` を参照
