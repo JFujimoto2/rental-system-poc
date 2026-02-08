@@ -1,0 +1,68 @@
+<div class="page-header">
+  <h1>入金実績レポート</h1>
+  <div class="page-header-actions">
+    <%= link_to "CSV ダウンロード", payment_summary_reports_path(format: :csv, from: params[:from], to: params[:to]), class: "btn" %>
+  </div>
+</div>
+
+<%= form_with(url: payment_summary_reports_path, method: :get, class: "search-form", data: { turbo_action: "replace" }) do |form| %>
+  <div class="search-fields">
+    <div class="search-field">
+      <label>開始月</label>
+      <%= form.month_field :from, value: params[:from] %>
+    </div>
+    <div class="search-field">
+      <label>終了月</label>
+      <%= form.month_field :to, value: params[:to] %>
+    </div>
+    <div class="search-actions">
+      <%= form.submit "集計", class: "btn btn-primary" %>
+    </div>
+  </div>
+<% end %>
+
+<p class="search-result-count"><%= @months.size %>ヶ月分</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>対象月</th>
+      <th>予定件数</th>
+      <th>入金件数</th>
+      <th>予定金額</th>
+      <th>入金額</th>
+      <th>入金率</th>
+      <th>振込</th>
+      <th>口座振替</th>
+      <th>現金</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @monthly_data.each do |d| %>
+      <tr>
+        <td><%= d[:month].strftime("%Y-%m") %></td>
+        <td><%= d[:total] %></td>
+        <td><%= d[:paid_count] %></td>
+        <td><%= number_to_currency(d[:expected]) %></td>
+        <td><%= number_to_currency(d[:paid_amount]) %></td>
+        <td><%= d[:rate] %>%</td>
+        <td><%= number_to_currency(d[:by_method]["transfer"] || 0) %></td>
+        <td><%= number_to_currency(d[:by_method]["direct_debit"] || 0) %></td>
+        <td><%= number_to_currency(d[:by_method]["cash"] || 0) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+  <tfoot>
+    <tr>
+      <th>合計</th>
+      <th><%= @monthly_data.sum { |d| d[:total] } %></th>
+      <th><%= @monthly_data.sum { |d| d[:paid_count] } %></th>
+      <th><%= number_to_currency(@monthly_data.sum { |d| d[:expected] }) %></th>
+      <th><%= number_to_currency(@monthly_data.sum { |d| d[:paid_amount] }) %></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </tfoot>
+</table>

@@ -12,6 +12,14 @@ Rails.application.routes.draw do
   resources :settlements
   resources :delinquencies, only: [ :index ]
 
+  resources :reports, only: [] do
+    collection do
+      get :property_pl
+      get :aging
+      get :payment_summary
+    end
+  end
+
   resources :bulk_clearings, only: [ :new, :create ] do
     collection do
       post :preview

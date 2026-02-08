@@ -1,0 +1,66 @@
+<div class="page-header">
+  <h1>物件別収支サマリ</h1>
+  <div class="page-header-actions">
+    <%= link_to "CSV ダウンロード", property_pl_reports_path(format: :csv, from: @from, to: @to), class: "btn" %>
+  </div>
+</div>
+
+<%= form_with(url: property_pl_reports_path, method: :get, class: "search-form", data: { turbo_action: "replace" }) do |form| %>
+  <div class="search-fields">
+    <div class="search-field">
+      <label>開始日</label>
+      <%= form.date_field :from, value: @from %>
+    </div>
+    <div class="search-field">
+      <label>終了日</label>
+      <%= form.date_field :to, value: @to %>
+    </div>
+    <div class="search-actions">
+      <%= form.submit "集計", class: "btn btn-primary" %>
+    </div>
+  </div>
+<% end %>
+
+<p class="search-result-count">対象期間: <%= @from %> 〜 <%= @to %> / <%= @report.size %>件</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>建物名</th>
+      <th>オーナー</th>
+      <th>転貸収入</th>
+      <th>保証賃料支出</th>
+      <th>収支差額</th>
+      <th>総部屋数</th>
+      <th>入居数</th>
+      <th>入居率</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @report.each do |r| %>
+      <tr>
+        <td><%= link_to r[:building].name, building_path(r[:building]) %></td>
+        <td><%= r[:building].owner&.name %></td>
+        <td><%= number_to_currency(r[:income]) %></td>
+        <td><%= number_to_currency(r[:expense]) %></td>
+        <td class="<%= r[:profit] >= 0 ? 'text-success' : 'text-danger' %>">
+          <%= number_to_currency(r[:profit]) %>
+        </td>
+        <td><%= r[:total_rooms] %></td>
+        <td><%= r[:occupied] %></td>
+        <td><%= r[:occupancy] %>%</td>
+      </tr>
+    <% end %>
+  </tbody>
+  <tfoot>
+    <tr>
+      <th colspan="2">合計</th>
+      <th><%= number_to_currency(@report.sum { |r| r[:income] }) %></th>
+      <th><%= number_to_currency(@report.sum { |r| r[:expense] }) %></th>
+      <th><%= number_to_currency(@report.sum { |r| r[:profit] }) %></th>
+      <th><%= @report.sum { |r| r[:total_rooms] } %></th>
+      <th><%= @report.sum { |r| r[:occupied] } %></th>
+      <th></th>
+    </tr>
+  </tfoot>
+</table>

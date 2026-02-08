@@ -1,0 +1,50 @@
+<div class="page-header">
+  <h1>債権滞留表</h1>
+  <div class="page-header-actions">
+    <%= link_to "CSV ダウンロード", aging_reports_path(format: :csv), class: "btn" %>
+  </div>
+</div>
+
+<div class="delinquency-summary">
+  <span class="summary-item">合計: <strong><%= @delinquencies.size %>件</strong></span>
+  <span class="summary-item">滞納額合計: <strong class="text-danger"><%= number_to_currency(@delinquencies.sum { |tp| tp.amount - (tp.paid_amount || 0) }) %></strong></span>
+</div>
+
+<% @aging_buckets.each do |label, payments| %>
+  <div class="dashboard-section">
+    <h2><%= label %><span class="badge"><%= payments.size %></span></h2>
+    <% if payments.any? %>
+      <table>
+        <thead>
+          <tr>
+            <th>入居者</th>
+            <th>建物</th>
+            <th>部屋</th>
+            <th>入金期日</th>
+            <th>滞納日数</th>
+            <th>請求金額</th>
+            <th>入金額</th>
+            <th>未収額</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% payments.each do |tp| %>
+            <% days = (Date.current - tp.due_date).to_i %>
+            <tr class="<%= aging_class(days) %>">
+              <td><%= link_to tp.contract.tenant.name, tenant_path(tp.contract.tenant) %></td>
+              <td><%= tp.contract.room.building.name %></td>
+              <td><%= tp.contract.room.room_number %></td>
+              <td><%= tp.due_date %></td>
+              <td><span class="aging-badge <%= aging_class(days) %>"><%= days %>日</span></td>
+              <td><%= number_to_currency(tp.amount) %></td>
+              <td><%= number_to_currency(tp.paid_amount) if tp.paid_amount %></td>
+              <td class="text-danger"><%= number_to_currency(tp.amount - (tp.paid_amount || 0)) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="empty-message">該当する滞納はありません。</p>
+    <% end %>
+  </div>
+<% end %>

@@ -57,6 +57,14 @@
               </ul>
             </div>
             <div class="nav-group">
+              <button type="button" class="nav-group-label">帳票</button>
+              <ul class="nav-dropdown">
+                <li><%= link_to "物件別収支サマリ", property_pl_reports_path %></li>
+                <li><%= link_to "債権滞留表", aging_reports_path %></li>
+                <li><%= link_to "入金実績レポート", payment_summary_reports_path %></li>
+              </ul>
+            </div>
+            <div class="nav-group">
               <button type="button" class="nav-group-label">データ管理</button>
               <ul class="nav-dropdown">
                 <li><%= link_to "インポート", new_import_path %></li>
