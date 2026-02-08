@@ -52,3 +52,7 @@ config/credentials/*.key
 
 # Investigation docs (contains internal system info)
 /docs/01_investigation/
+
+# Ignore key files for decrypting credentials and more.
+/config/*.key
+
