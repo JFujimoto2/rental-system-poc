@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   resources :owners
   resources :users, only: [ :index, :edit, :update ]
 
+  resources :delinquencies, only: [ :index ]
+
   resources :imports, only: [ :new, :create ] do
     collection do
       post :preview

@@ -1,0 +1,68 @@
+<div class="page-header">
+  <h1>滞納一覧</h1>
+  <div class="page-header-actions">
+    <%= link_to "CSV ダウンロード", delinquencies_path(format: :csv, q: @search_params.to_h), class: "btn" %>
+  </div>
+</div>
+
+<%= form_with(url: delinquencies_path, method: :get, class: "search-form", data: { turbo_action: "replace" }) do |form| %>
+  <div class="search-fields">
+    <div class="search-field">
+      <label>入居者名</label>
+      <%= form.text_field "q[tenant_name]", value: @search_params[:tenant_name] %>
+    </div>
+    <div class="search-field">
+      <label>建物名</label>
+      <%= form.text_field "q[building_name]", value: @search_params[:building_name] %>
+    </div>
+    <div class="search-field">
+      <label>滞納期間</label>
+      <%= form.select "q[aging]",
+            [["すべて", ""], ["〜30日", "30"], ["31〜60日", "60"], ["61〜90日", "90"], ["90日超", "90over"]],
+            { selected: @search_params[:aging] } %>
+    </div>
+    <div class="search-actions">
+      <%= form.submit "検索", class: "btn btn-primary" %>
+      <%= link_to "クリア", delinquencies_path, class: "btn" %>
+    </div>
+  </div>
+<% end %>
+
+<div class="delinquency-summary">
+  <span class="summary-item">合計: <strong><%= @delinquencies.size %>件</strong></span>
+  <span class="summary-item">滞納額合計: <strong class="text-danger"><%= number_to_currency(@delinquencies.sum { |tp| tp.amount - (tp.paid_amount || 0) }) %></strong></span>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>入居者</th>
+      <th>建物</th>
+      <th>部屋</th>
+      <th>入金期日</th>
+      <th>滞納日数</th>
+      <th>請求金額</th>
+      <th>入金額</th>
+      <th>未収額</th>
+      <th>状態</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @delinquencies.each do |tp| %>
+      <% days = (Date.current - tp.due_date).to_i %>
+      <tr class="<%= aging_class(days) %>">
+        <td><%= link_to tp.contract.tenant.name, tenant_path(tp.contract.tenant) %></td>
+        <td><%= tp.contract.room.building.name %></td>
+        <td><%= tp.contract.room.room_number %></td>
+        <td><%= tp.due_date %></td>
+        <td><span class="aging-badge <%= aging_class(days) %>"><%= days %>日</span></td>
+        <td><%= number_to_currency(tp.amount) %></td>
+        <td><%= number_to_currency(tp.paid_amount) if tp.paid_amount %></td>
+        <td class="text-danger"><%= number_to_currency(tp.amount - (tp.paid_amount || 0)) %></td>
+        <td><%= tp.status_label %></td>
+        <td><%= link_to "詳細", tenant_payment_path(tp) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

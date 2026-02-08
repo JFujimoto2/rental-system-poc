@@ -960,6 +960,37 @@ tbody tr:last-child td {
   padding: 0.5rem 0;
 }
 
+/* ========================================
+   Delinquency
+   ======================================== */
+.delinquency-summary {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.summary-item strong {
+  font-weight: 600;
+}
+
+.aging-badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.775rem;
+  font-weight: 600;
+}
+
+.aging-normal { background: #fef3c7; color: #92400e; }
+.aging-warning { background: #fed7aa; color: #9a3412; }
+.aging-danger { background: #fecaca; color: #991b1b; }
+.aging-critical { background: #991b1b; color: #fff; }
+
+tr.aging-critical td { background: #fef2f2; }
+tr.aging-danger td { background: #fff7ed; }
+
 .mt-1 { margin-top: 0.5rem; }
 .mt-2 { margin-top: 1rem; }
 .mb-0 { margin-bottom: 0; }
