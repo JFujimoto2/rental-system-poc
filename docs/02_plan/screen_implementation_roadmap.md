@@ -203,14 +203,20 @@ BOM付きUTF-8のCSV出力（Excel対応）。
 
 詳細は `docs/02_plan/additional_features_plan.md` を参照。
 
-### Step 8: ダッシュボード — 未着手
+### Step 8: ダッシュボード — 完了
+
 ログイン後トップページに業務KPIを集約表示。新テーブル不要。
+詳細は `docs/06_features/08_dashboard.md` を参照
 
-### Step 9: 滞納管理 — 未着手
-入金期日超過の自動検出・滞納一覧・督促管理。
+### Step 9: 滞納管理 — 完了
 
-### Step 10: 入金一括消込 — 未着手
+入金期日超過の自動検出・滞納一覧・エイジング分類・CSV出力。
+詳細は `docs/06_features/09_delinquency.md` を参照
+
+### Step 10: 入金一括消込 — 完了
+
 銀行入金明細CSVから入金予定への自動マッチング＋一括消込。
+詳細は `docs/06_features/10_bulk_clearing.md` を参照
 
 ### Step 11: 解約精算 — 未着手
 日割り計算・敷金返還・原状回復費用の精算処理。
