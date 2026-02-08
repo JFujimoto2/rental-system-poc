@@ -1,0 +1,85 @@
+<% content_for :title, "インポートプレビュー" %>
+
+<h1>インポートプレビュー</h1>
+
+<p>
+  取込対象: <strong><%= @import_type == "building" ? "建物" : "部屋" %></strong> /
+  全 <%= @result[:rows].size %> 件（正常: <%= @importer.valid_rows_count %> 件、エラー: <%= @importer.error_rows_count %> 件）
+</p>
+
+<% if @result[:errors].any? %>
+  <div class="error-messages">
+    <h2>エラー一覧</h2>
+    <ul>
+      <% @result[:errors].each do |error| %>
+        <li><%= error %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>行</th>
+      <th>状態</th>
+      <% if @import_type == "building" %>
+        <th>建物名</th>
+        <th>住所</th>
+        <th>構造</th>
+        <th>階数</th>
+        <th>築年</th>
+        <th>最寄駅</th>
+      <% else %>
+        <th>建物名</th>
+        <th>部屋番号</th>
+        <th>階数</th>
+        <th>面積</th>
+        <th>賃料</th>
+        <th>間取り</th>
+        <th>状態</th>
+      <% end %>
+      <th>エラー</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @result[:rows].each do |row| %>
+      <tr class="<%= row[:errors].any? ? 'row-error' : '' %>">
+        <td><%= row[:row_number] %></td>
+        <td><%= row[:errors].any? ? "エラー" : "OK" %></td>
+        <% if @import_type == "building" %>
+          <td><%= row[:data][:name] %></td>
+          <td><%= row[:data][:address] %></td>
+          <td><%= row[:data][:building_type] %></td>
+          <td><%= row[:data][:floors] %></td>
+          <td><%= row[:data][:built_year] %></td>
+          <td><%= row[:data][:nearest_station] %></td>
+        <% else %>
+          <td><%= row[:data][:building_name] %></td>
+          <td><%= row[:data][:room_number] %></td>
+          <td><%= row[:data][:floor] %></td>
+          <td><%= row[:data][:area] %></td>
+          <td><%= row[:data][:rent] %></td>
+          <td><%= row[:data][:room_type] %></td>
+          <td><%= row[:data][:status_label] %></td>
+        <% end %>
+        <td><%= row[:errors].join(", ") if row[:errors].any? %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% if @importer.valid_rows_count > 0 %>
+  <div class="actions-bar">
+    <%= form_with url: imports_path do |form| %>
+      <%= form.hidden_field :import_type, value: @import_type %>
+      <%= form.submit "#{@importer.valid_rows_count}件をインポートする", class: "btn btn-primary" %>
+    <% end %>
+    <%= link_to "やり直す", new_import_path, class: "btn" %>
+  </div>
+<% else %>
+  <div class="actions-bar">
+    <p>インポート可能なデータがありません。</p>
+    <%= link_to "やり直す", new_import_path, class: "btn" %>
+  </div>
+<% end %>

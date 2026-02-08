@@ -1,0 +1,62 @@
+<%= form_with(model: tenant_payment) do |form| %>
+  <% if tenant_payment.errors.any? %>
+    <div class="error-messages">
+      <h2><%= tenant_payment.errors.count %>件のエラーがあります</h2>
+      <ul>
+        <% tenant_payment.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :contract_id %>
+    <%= form.collection_select :contract_id,
+      Contract.includes(room: :building, tenant: nil).order("buildings.name, rooms.room_number").map { |c| ["#{c.room.building.name} #{c.room.room_number}（#{c.tenant.name}）", c.id] },
+      :last, :first, { prompt: "選択してください" } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :due_date %>
+    <%= form.date_field :due_date %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :amount %>
+    <%= form.number_field :amount %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :paid_amount %>
+    <%= form.number_field :paid_amount %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :paid_date %>
+    <%= form.date_field :paid_date %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :status %>
+    <%= form.select :status,
+      TenantPayment.statuses.keys.map { |k| [I18n.t("activerecord.enums.tenant_payment.status.#{k}"), k] },
+      { prompt: "選択してください" } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :payment_method %>
+    <%= form.select :payment_method,
+      TenantPayment.payment_methods.keys.map { |k| [I18n.t("activerecord.enums.tenant_payment.payment_method.#{k}"), k] },
+      { prompt: "選択してください", include_blank: true } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :notes %>
+    <%= form.text_area :notes, rows: 4 %>
+  </div>
+
+  <div class="form-actions">
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+<% end %>

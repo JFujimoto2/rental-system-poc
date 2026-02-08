@@ -9,6 +9,8 @@ ja:
       rent_revision: 賃料改定
       tenant: 入居者
       contract: 転貸借契約
+      tenant_payment: テナント入金
+      owner_payment: オーナー支払
     attributes:
       building:
         name: 建物名
@@ -94,6 +96,26 @@ ja:
         renewal_fee: 更新料
         status: 状態
         notes: 備考
+      tenant_payment:
+        contract: 転貸借契約
+        contract_id: 転貸借契約
+        due_date: 入金期日
+        amount: 請求金額
+        paid_amount: 入金額
+        paid_date: 入金日
+        status: 状態
+        payment_method: 入金方法
+        notes: 備考
+      owner_payment:
+        master_lease: マスターリース契約
+        master_lease_id: マスターリース契約
+        target_month: 対象月
+        guaranteed_amount: 保証賃料額
+        deduction: 控除額
+        net_amount: 支払額
+        paid_date: 支払日
+        status: 状態
+        notes: 備考
     enums:
       room:
         status:
@@ -118,3 +140,17 @@ ja:
           active: 契約中
           scheduled_termination: 解約予定
           terminated: 解約済
+      tenant_payment:
+        status:
+          unpaid: 未入金
+          paid: 入金済
+          partial: 一部入金
+          overdue: 滞納
+        payment_method:
+          transfer: 振込
+          direct_debit: 口座振替
+          cash: 現金
+      owner_payment:
+        status:
+          unpaid: 未払
+          paid: 支払済

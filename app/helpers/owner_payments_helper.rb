@@ -1,0 +1,2 @@
+module OwnerPaymentsHelper
+end

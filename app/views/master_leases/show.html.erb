@@ -76,3 +76,34 @@
 <% else %>
   <p>賃料改定履歴がありません。</p>
 <% end %>
+
+<h2>オーナー支払履歴</h2>
+
+<% if @master_lease.owner_payments.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>対象月</th>
+        <th>保証賃料額</th>
+        <th>控除額</th>
+        <th>支払額</th>
+        <th>状態</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @master_lease.owner_payments.order(:target_month).each do |op| %>
+        <tr>
+          <td><%= op.target_month.strftime("%Y年%m月") %></td>
+          <td><%= number_to_currency(op.guaranteed_amount, unit: "¥", precision: 0) %></td>
+          <td><%= number_to_currency(op.deduction, unit: "¥", precision: 0) if op.deduction %></td>
+          <td><%= number_to_currency(op.net_amount, unit: "¥", precision: 0) %></td>
+          <td><%= op.status_label %></td>
+          <td><%= link_to "詳細", op %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>オーナー支払履歴がありません。</p>
+<% end %>

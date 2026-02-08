@@ -1,0 +1,39 @@
+<% content_for :title, "テナント入金一覧" %>
+
+<p class="notice"><%= notice %></p>
+
+<h1>テナント入金一覧</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>入居者</th>
+      <th>部屋</th>
+      <th>入金期日</th>
+      <th>請求金額</th>
+      <th>入金額</th>
+      <th>状態</th>
+      <th>入金方法</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @tenant_payments.each do |tp| %>
+      <tr>
+        <td><%= link_to tp.contract.tenant.name, tp.contract.tenant %></td>
+        <td><%= link_to "#{tp.contract.room.building.name} #{tp.contract.room.room_number}", tp.contract.room %></td>
+        <td><%= tp.due_date %></td>
+        <td><%= number_to_currency(tp.amount, unit: "¥", precision: 0) %></td>
+        <td><%= number_to_currency(tp.paid_amount, unit: "¥", precision: 0) if tp.paid_amount %></td>
+        <td><%= tp.status_label %></td>
+        <td><%= tp.payment_method_label %></td>
+        <td class="actions">
+          <%= link_to "詳細", tp %>
+          <%= link_to "編集", edit_tenant_payment_path(tp) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "新規入金登録", new_tenant_payment_path, class: "btn btn-primary" %>

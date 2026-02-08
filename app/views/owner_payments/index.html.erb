@@ -1,0 +1,39 @@
+<% content_for :title, "オーナー支払一覧" %>
+
+<p class="notice"><%= notice %></p>
+
+<h1>オーナー支払一覧</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>オーナー</th>
+      <th>建物</th>
+      <th>対象月</th>
+      <th>保証賃料額</th>
+      <th>控除額</th>
+      <th>支払額</th>
+      <th>状態</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @owner_payments.each do |op| %>
+      <tr>
+        <td><%= link_to op.master_lease.owner.name, op.master_lease.owner %></td>
+        <td><%= link_to op.master_lease.building.name, op.master_lease.building %></td>
+        <td><%= op.target_month.strftime("%Y年%m月") %></td>
+        <td><%= number_to_currency(op.guaranteed_amount, unit: "¥", precision: 0) %></td>
+        <td><%= number_to_currency(op.deduction, unit: "¥", precision: 0) if op.deduction %></td>
+        <td><%= number_to_currency(op.net_amount, unit: "¥", precision: 0) %></td>
+        <td><%= op.status_label %></td>
+        <td class="actions">
+          <%= link_to "詳細", op %>
+          <%= link_to "編集", edit_owner_payment_path(op) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "新規オーナー支払登録", new_owner_payment_path, class: "btn btn-primary" %>

@@ -1,0 +1,10 @@
+<% content_for :title, "オーナー支払編集" %>
+
+<h1>オーナー支払編集</h1>
+
+<%= render "form", owner_payment: @owner_payment %>
+
+<div class="actions-bar">
+  <%= link_to "詳細に戻る", @owner_payment, class: "btn" %>
+  <%= link_to "一覧に戻る", owner_payments_path, class: "btn" %>
+</div>

@@ -26,3 +26,34 @@
   <%= link_to "一覧に戻る", contracts_path, class: "btn" %>
   <%= button_to "削除", @contract, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "この契約を削除しますか？" } %>
 </div>
+
+<h2>テナント入金履歴</h2>
+
+<% if @contract.tenant_payments.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>入金期日</th>
+        <th>請求金額</th>
+        <th>入金額</th>
+        <th>状態</th>
+        <th>入金方法</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @contract.tenant_payments.order(:due_date).each do |tp| %>
+        <tr>
+          <td><%= tp.due_date %></td>
+          <td><%= number_to_currency(tp.amount, unit: "¥", precision: 0) %></td>
+          <td><%= number_to_currency(tp.paid_amount, unit: "¥", precision: 0) if tp.paid_amount %></td>
+          <td><%= tp.status_label %></td>
+          <td><%= tp.payment_method_label %></td>
+          <td><%= link_to "詳細", tp %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>テナント入金履歴がありません。</p>
+<% end %>

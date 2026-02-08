@@ -66,6 +66,8 @@ group :test do
 end
 
 gem "rails-i18n", "~> 8.1"
+gem "roo", "~> 2.10"
+gem "caxlsx", "~> 4.1"
 
 group :development, :test do
   gem "rspec-rails", "~> 8.0"

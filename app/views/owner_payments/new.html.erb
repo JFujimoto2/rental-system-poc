@@ -1,0 +1,9 @@
+<% content_for :title, "新規オーナー支払登録" %>
+
+<h1>新規オーナー支払登録</h1>
+
+<%= render "form", owner_payment: @owner_payment %>
+
+<div class="actions-bar">
+  <%= link_to "一覧に戻る", owner_payments_path, class: "btn" %>
+</div>

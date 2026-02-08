@@ -1,0 +1,24 @@
+<% content_for :title, "#{@owner_payment.master_lease.owner.name} - オーナー支払詳細" %>
+
+<p class="notice"><%= notice %></p>
+
+<h1><%= @owner_payment.master_lease.owner.name %> — オーナー支払詳細</h1>
+
+<table class="detail-table">
+  <tr><th>マスターリース契約</th><td><%= link_to @owner_payment.master_lease.building.name, @owner_payment.master_lease %></td></tr>
+  <tr><th>オーナー</th><td><%= link_to @owner_payment.master_lease.owner.name, @owner_payment.master_lease.owner %></td></tr>
+  <tr><th>建物</th><td><%= link_to @owner_payment.master_lease.building.name, @owner_payment.master_lease.building %></td></tr>
+  <tr><th>対象月</th><td><%= @owner_payment.target_month.strftime("%Y年%m月") %></td></tr>
+  <tr><th>保証賃料額</th><td><%= number_to_currency(@owner_payment.guaranteed_amount, unit: "¥", precision: 0) %></td></tr>
+  <tr><th>控除額</th><td><%= number_to_currency(@owner_payment.deduction, unit: "¥", precision: 0) if @owner_payment.deduction %></td></tr>
+  <tr><th>支払額</th><td><%= number_to_currency(@owner_payment.net_amount, unit: "¥", precision: 0) %></td></tr>
+  <tr><th>支払日</th><td><%= @owner_payment.paid_date %></td></tr>
+  <tr><th>状態</th><td><%= @owner_payment.status_label %></td></tr>
+  <tr><th>備考</th><td><%= @owner_payment.notes %></td></tr>
+</table>
+
+<div class="actions-bar">
+  <%= link_to "編集", edit_owner_payment_path(@owner_payment), class: "btn" %>
+  <%= link_to "一覧に戻る", owner_payments_path, class: "btn" %>
+  <%= button_to "削除", @owner_payment, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "この支払情報を削除しますか？" } %>
+</div>

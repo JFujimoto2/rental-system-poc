@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_08_092317) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_08_094001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -78,6 +78,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_08_092317) do
     t.index ["owner_id"], name: "index_master_leases_on_owner_id"
   end
 
+  create_table "owner_payments", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "deduction"
+    t.integer "guaranteed_amount"
+    t.bigint "master_lease_id", null: false
+    t.integer "net_amount"
+    t.text "notes"
+    t.date "paid_date"
+    t.integer "status"
+    t.date "target_month"
+    t.datetime "updated_at", null: false
+    t.index ["master_lease_id"], name: "index_owner_payments_on_master_lease_id"
+  end
+
   create_table "owners", force: :cascade do |t|
     t.string "account_holder"
     t.string "account_number"
@@ -120,6 +134,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_08_092317) do
     t.index ["building_id"], name: "index_rooms_on_building_id"
   end
 
+  create_table "tenant_payments", force: :cascade do |t|
+    t.integer "amount"
+    t.bigint "contract_id", null: false
+    t.datetime "created_at", null: false
+    t.date "due_date"
+    t.text "notes"
+    t.integer "paid_amount"
+    t.date "paid_date"
+    t.integer "payment_method"
+    t.integer "status"
+    t.datetime "updated_at", null: false
+    t.index ["contract_id"], name: "index_tenant_payments_on_contract_id"
+  end
+
   create_table "tenants", force: :cascade do |t|
     t.string "address"
     t.datetime "created_at", null: false
@@ -141,6 +169,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_08_092317) do
   add_foreign_key "exemption_periods", "rooms"
   add_foreign_key "master_leases", "buildings"
   add_foreign_key "master_leases", "owners"
+  add_foreign_key "owner_payments", "master_leases"
   add_foreign_key "rent_revisions", "master_leases"
   add_foreign_key "rooms", "buildings"
+  add_foreign_key "tenant_payments", "contracts"
 end

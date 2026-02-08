@@ -1,0 +1,56 @@
+<% content_for :title, "Excel インポート" %>
+
+<h1>Excel インポート</h1>
+
+<%= form_with url: preview_imports_path, multipart: true, data: { turbo: false } do |form| %>
+  <div class="form-group">
+    <%= form.label :import_type, "インポート種別" %>
+    <%= form.select :import_type,
+      [["建物", "building"], ["部屋", "room"]],
+      { prompt: "選択してください" },
+      { name: "import[import_type]" } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :file, "Excel ファイル (.xlsx)" %>
+    <%= form.file_field :file, accept: ".xlsx", name: "import[file]" %>
+  </div>
+
+  <div class="form-actions">
+    <%= form.submit "プレビュー", class: "btn btn-primary" %>
+  </div>
+<% end %>
+
+<h2>フォーマット</h2>
+
+<h3>建物インポート</h3>
+<table>
+  <thead>
+    <tr>
+      <th>A: 建物名 *</th>
+      <th>B: 住所</th>
+      <th>C: 構造</th>
+      <th>D: 階数</th>
+      <th>E: 築年</th>
+      <th>F: 最寄駅</th>
+      <th>G: 備考</th>
+    </tr>
+  </thead>
+</table>
+
+<h3>部屋インポート</h3>
+<table>
+  <thead>
+    <tr>
+      <th>A: 建物名 *</th>
+      <th>B: 部屋番号 *</th>
+      <th>C: 階数</th>
+      <th>D: 面積</th>
+      <th>E: 賃料</th>
+      <th>F: 間取り</th>
+      <th>G: 状態</th>
+      <th>H: 備考</th>
+    </tr>
+  </thead>
+</table>
+<p>* は必須項目</p>

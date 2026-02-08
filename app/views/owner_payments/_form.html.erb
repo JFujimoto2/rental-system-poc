@@ -1,0 +1,60 @@
+<%= form_with(model: owner_payment) do |form| %>
+  <% if owner_payment.errors.any? %>
+    <div class="error-messages">
+      <h2><%= owner_payment.errors.count %>件のエラーがあります</h2>
+      <ul>
+        <% owner_payment.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :master_lease_id %>
+    <%= form.collection_select :master_lease_id,
+      MasterLease.includes(:building, :owner).map { |ml| ["#{ml.building.name}（#{ml.owner.name}）", ml.id] },
+      :last, :first, { prompt: "選択してください" } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :target_month %>
+    <%= form.date_field :target_month %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :guaranteed_amount %>
+    <%= form.number_field :guaranteed_amount %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :deduction %>
+    <%= form.number_field :deduction %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :net_amount %>
+    <%= form.number_field :net_amount %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :status %>
+    <%= form.select :status,
+      OwnerPayment.statuses.keys.map { |k| [I18n.t("activerecord.enums.owner_payment.status.#{k}"), k] },
+      { prompt: "選択してください" } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :paid_date %>
+    <%= form.date_field :paid_date %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :notes %>
+    <%= form.text_area :notes, rows: 4 %>
+  </div>
+
+  <div class="form-actions">
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+<% end %>
