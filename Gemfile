@@ -77,3 +77,5 @@ group :development, :test do
   gem "factory_bot_rails", "~> 6.5"
   gem "shoulda-matchers", "~> 7.0"
 end
+
+gem "dotenv-rails", "~> 3.2", groups: [ :development, :test ]

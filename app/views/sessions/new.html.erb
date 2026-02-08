@@ -9,12 +9,16 @@
   <% end %>
 
   <div class="login-buttons">
-    <%= form_with url: "/auth/entra_id", method: :post, data: { turbo: false } do %>
-      <%= submit_tag "Microsoft でログイン", class: "btn btn-primary btn-login" %>
+    <% if ENV["ENTRA_CLIENT_ID"].present? %>
+      <%= form_with url: "/auth/entra_id", method: :post, data: { turbo: false } do %>
+        <%= submit_tag "Microsoft でログイン", class: "btn btn-primary btn-login" %>
+      <% end %>
     <% end %>
 
-    <%= form_with url: "/auth/google_oauth2", method: :post, data: { turbo: false } do %>
-      <%= submit_tag "Google でログイン", class: "btn btn-login btn-google" %>
+    <% if ENV["GOOGLE_CLIENT_ID"].present? %>
+      <%= form_with url: "/auth/google_oauth2", method: :post, data: { turbo: false } do %>
+        <%= submit_tag "Google でログイン", class: "btn btn-login btn-google" %>
+      <% end %>
     <% end %>
   </div>
 

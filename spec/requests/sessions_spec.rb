@@ -5,8 +5,8 @@ RSpec.describe 'Sessions', :skip_auth do
     it 'ログイン画面を表示できる' do
       get login_path
       expect(response).to have_http_status(:success)
-      expect(response.body).to include('Microsoft でログイン')
-      expect(response.body).to include('Google でログイン')
+      expect(response.body).to include('ログインしてください')
+      expect(response.body).to include('開発用ログイン')
     end
   end
 

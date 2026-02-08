@@ -119,6 +119,9 @@ GEM
       reline (>= 0.3.8)
     diff-lcs (1.6.2)
     dotenv (3.2.0)
+    dotenv-rails (3.2.0)
+      dotenv (= 3.2.0)
+      railties (>= 6.1)
     drb (2.2.3)
     ed25519 (1.4.0)
     erb (6.0.1)
@@ -492,6 +495,7 @@ DEPENDENCIES
   capybara-playwright-driver
   caxlsx (~> 4.1)
   debug
+  dotenv-rails (~> 3.2)
   factory_bot_rails (~> 6.5)
   image_processing (~> 1.2)
   importmap-rails
