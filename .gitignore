@@ -45,3 +45,10 @@ docker-compose.override.yml
 /db/*.sqlite3-journal
 /db/*.sqlite3-shm
 /db/*.sqlite3-wal
+
+# Secrets
+config/master.key
+config/credentials/*.key
+
+# Investigation docs (contains internal system info)
+/docs/01_investigation/
