@@ -4,7 +4,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Rental System POC — a Rails 8.1.2 monolith using Ruby 3.3.2, PostgreSQL, and Hotwire (Turbo + Stimulus). Currently a scaffolded POC with no domain models or routes yet.
+現行の賃貸管理システム（Java 6 / Oracle / 独自MBBフレームワーク）を Rails + PostgreSQL でリプレイスするための PoC。
+現行システムは 2,653ファイル / 835,115行、104画面、276テーブル（約480GB）の規模。
+
+技術スタック: Rails 8.1 / Ruby 3.3 / PostgreSQL 16 / Docker / AWS (EC2 + RDS) / GitHub Actions / Claude Code
+
+### 外部連携
+- OBIC7: FTP で会計仕訳データ連携（5本）
+- アプラス: ファイルで口座振替依頼・結果取込（2本）
+- GoWeb: ファイルでエンド契約データ出力
+- 保証会社: 保証会社連携管理
+
+### ドキュメント構成
+- `docs/01_investigation/` — 現行システム調査結果
+- `docs/02_plan/` — PoC計画・進め方
+- `docs/03_tech_reference/` — 技術参考資料
+- `docs/04_db_analysis/` — DB調査・分析結果
+- `docs/05_screenshots/` — 画面キャプチャ
 
 ## Common Commands
 
