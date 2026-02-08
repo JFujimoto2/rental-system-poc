@@ -1,0 +1,70 @@
+<%= form_with(model: master_lease) do |form| %>
+  <% if master_lease.errors.any? %>
+    <div class="error-messages">
+      <h2><%= master_lease.errors.count %>件のエラーがあります</h2>
+      <ul>
+        <% master_lease.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :owner_id %>
+    <%= form.collection_select :owner_id, Owner.order(:name), :id, :name, { prompt: "選択してください" } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :building_id %>
+    <%= form.collection_select :building_id, Building.order(:name), :id, :name, { prompt: "選択してください" } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :contract_type %>
+    <%= form.select :contract_type,
+      MasterLease.contract_types.keys.map { |k| [I18n.t("activerecord.enums.master_lease.contract_type.#{k}"), k] },
+      { prompt: "選択してください" } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :start_date %>
+    <%= form.date_field :start_date %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :end_date %>
+    <%= form.date_field :end_date %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :guaranteed_rent %>
+    <%= form.number_field :guaranteed_rent %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :management_fee_rate %>
+    <%= form.number_field :management_fee_rate, step: 0.1 %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :rent_review_cycle %>
+    <%= form.number_field :rent_review_cycle %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :status %>
+    <%= form.select :status,
+      MasterLease.statuses.keys.map { |k| [I18n.t("activerecord.enums.master_lease.status.#{k}"), k] },
+      { prompt: "選択してください" } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :notes %>
+    <%= form.text_area :notes, rows: 4 %>
+  </div>
+
+  <div class="form-actions">
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+<% end %>

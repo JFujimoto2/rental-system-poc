@@ -56,3 +56,34 @@
 <% end %>
 
 <%= link_to "この建物に部屋を追加", new_room_path(building_id: @building.id), class: "btn btn-primary" %>
+
+<h2>マスターリース契約</h2>
+
+<% if @building.master_leases.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>オーナー</th>
+        <th>契約形態</th>
+        <th>契約開始日</th>
+        <th>契約終了日</th>
+        <th>保証賃料</th>
+        <th>状態</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @building.master_leases.includes(:owner).each do |ml| %>
+        <tr>
+          <td><%= link_to ml.owner.name, ml.owner %></td>
+          <td><%= ml.contract_type_label %></td>
+          <td><%= ml.start_date %></td>
+          <td><%= ml.end_date %></td>
+          <td><%= number_to_currency(ml.guaranteed_rent, unit: "¥", precision: 0) if ml.guaranteed_rent %></td>
+          <td><%= link_to ml.status_label, ml %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>マスターリース契約がありません。</p>
+<% end %>

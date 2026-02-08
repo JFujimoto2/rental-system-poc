@@ -1,0 +1,78 @@
+<% content_for :title, "#{@master_lease.building.name} - マスターリース契約" %>
+
+<p class="notice"><%= notice %></p>
+
+<h1><%= @master_lease.building.name %> — マスターリース契約</h1>
+
+<table class="detail-table">
+  <tr><th>オーナー</th><td><%= link_to @master_lease.owner.name, @master_lease.owner %></td></tr>
+  <tr><th>建物</th><td><%= link_to @master_lease.building.name, @master_lease.building %></td></tr>
+  <tr><th>契約形態</th><td><%= @master_lease.contract_type_label %></td></tr>
+  <tr><th>契約開始日</th><td><%= @master_lease.start_date %></td></tr>
+  <tr><th>契約終了日</th><td><%= @master_lease.end_date %></td></tr>
+  <tr><th>保証賃料</th><td><%= number_to_currency(@master_lease.guaranteed_rent, unit: "¥", precision: 0) if @master_lease.guaranteed_rent %></td></tr>
+  <tr><th>管理手数料率</th><td><%= "#{@master_lease.management_fee_rate}%" if @master_lease.management_fee_rate %></td></tr>
+  <tr><th>賃料改定周期</th><td><%= "#{@master_lease.rent_review_cycle}ヶ月" if @master_lease.rent_review_cycle %></td></tr>
+  <tr><th>状態</th><td><%= @master_lease.status_label %></td></tr>
+  <tr><th>備考</th><td><%= @master_lease.notes %></td></tr>
+</table>
+
+<div class="actions-bar">
+  <%= link_to "編集", edit_master_lease_path(@master_lease), class: "btn" %>
+  <%= link_to "一覧に戻る", master_leases_path, class: "btn" %>
+  <%= button_to "削除", @master_lease, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "この契約を削除しますか？" } %>
+</div>
+
+<h2>免責期間</h2>
+
+<% if @master_lease.exemption_periods.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>部屋</th>
+        <th>免責開始日</th>
+        <th>免責終了日</th>
+        <th>事由</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @master_lease.exemption_periods.each do |ep| %>
+        <tr>
+          <td><%= ep.room ? ep.room.room_number : "建物全体" %></td>
+          <td><%= ep.start_date %></td>
+          <td><%= ep.end_date %></td>
+          <td><%= ep.reason %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>免責期間が登録されていません。</p>
+<% end %>
+
+<h2>賃料改定履歴</h2>
+
+<% if @master_lease.rent_revisions.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>改定日</th>
+        <th>改定前保証賃料</th>
+        <th>改定後保証賃料</th>
+        <th>改定理由</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @master_lease.rent_revisions.order(:revision_date).each do |rr| %>
+        <tr>
+          <td><%= rr.revision_date %></td>
+          <td><%= number_to_currency(rr.old_rent, unit: "¥", precision: 0) %></td>
+          <td><%= number_to_currency(rr.new_rent, unit: "¥", precision: 0) %></td>
+          <td><%= rr.notes %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>賃料改定履歴がありません。</p>
+<% end %>

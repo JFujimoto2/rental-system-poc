@@ -4,6 +4,9 @@ ja:
       building: 建物
       room: 部屋
       owner: オーナー
+      master_lease: マスターリース契約
+      exemption_period: 免責期間
+      rent_revision: 賃料改定
     attributes:
       building:
         name: 建物名
@@ -36,9 +39,41 @@ ja:
         account_number: 口座番号
         account_holder: 口座名義
         notes: 備考
+      master_lease:
+        owner: オーナー
+        building: 建物
+        contract_type: 契約形態
+        start_date: 契約開始日
+        end_date: 契約終了日
+        guaranteed_rent: 保証賃料
+        management_fee_rate: 管理手数料率
+        rent_review_cycle: 賃料改定周期
+        status: 状態
+        notes: 備考
+      exemption_period:
+        master_lease: マスターリース契約
+        room: 部屋
+        start_date: 免責開始日
+        end_date: 免責終了日
+        reason: 事由
+      rent_revision:
+        master_lease: マスターリース契約
+        revision_date: 改定日
+        old_rent: 改定前保証賃料
+        new_rent: 改定後保証賃料
+        notes: 改定理由
     enums:
       room:
         status:
           vacant: 空室
           occupied: 入居中
           notice: 退去予定
+      master_lease:
+        contract_type:
+          sublease: サブリース
+          management: 管理委託
+          own: 自社物件
+        status:
+          active: 契約中
+          scheduled_termination: 解約予定
+          terminated: 解約済

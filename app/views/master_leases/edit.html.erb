@@ -1,0 +1,10 @@
+<% content_for :title, "マスターリース契約編集" %>
+
+<h1>マスターリース契約編集</h1>
+
+<%= render "form", master_lease: @master_lease %>
+
+<div class="actions-bar">
+  <%= link_to "詳細に戻る", @master_lease, class: "btn" %>
+  <%= link_to "一覧に戻る", master_leases_path, class: "btn" %>
+</div>

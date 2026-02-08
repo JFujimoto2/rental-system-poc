@@ -1,0 +1,39 @@
+<% content_for :title, "マスターリース契約一覧" %>
+
+<p class="notice"><%= notice %></p>
+
+<h1>マスターリース契約一覧</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>オーナー</th>
+      <th>建物</th>
+      <th>契約形態</th>
+      <th>契約開始日</th>
+      <th>契約終了日</th>
+      <th>保証賃料</th>
+      <th>状態</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @master_leases.each do |master_lease| %>
+      <tr>
+        <td><%= link_to master_lease.owner.name, master_lease.owner %></td>
+        <td><%= link_to master_lease.building.name, master_lease.building %></td>
+        <td><%= master_lease.contract_type_label %></td>
+        <td><%= master_lease.start_date %></td>
+        <td><%= master_lease.end_date %></td>
+        <td><%= number_to_currency(master_lease.guaranteed_rent, unit: "¥", precision: 0) if master_lease.guaranteed_rent %></td>
+        <td><%= master_lease.status_label %></td>
+        <td class="actions">
+          <%= link_to "詳細", master_lease %>
+          <%= link_to "編集", edit_master_lease_path(master_lease) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "新規契約登録", new_master_lease_path, class: "btn btn-primary" %>

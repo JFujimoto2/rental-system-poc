@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_08_090053) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_08_091518) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -26,6 +26,35 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_08_090053) do
     t.bigint "owner_id"
     t.datetime "updated_at", null: false
     t.index ["owner_id"], name: "index_buildings_on_owner_id"
+  end
+
+  create_table "exemption_periods", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.date "end_date"
+    t.bigint "master_lease_id", null: false
+    t.string "reason"
+    t.bigint "room_id"
+    t.date "start_date"
+    t.datetime "updated_at", null: false
+    t.index ["master_lease_id"], name: "index_exemption_periods_on_master_lease_id"
+    t.index ["room_id"], name: "index_exemption_periods_on_room_id"
+  end
+
+  create_table "master_leases", force: :cascade do |t|
+    t.bigint "building_id", null: false
+    t.integer "contract_type"
+    t.datetime "created_at", null: false
+    t.date "end_date"
+    t.integer "guaranteed_rent"
+    t.decimal "management_fee_rate"
+    t.text "notes"
+    t.bigint "owner_id", null: false
+    t.integer "rent_review_cycle"
+    t.date "start_date"
+    t.integer "status"
+    t.datetime "updated_at", null: false
+    t.index ["building_id"], name: "index_master_leases_on_building_id"
+    t.index ["owner_id"], name: "index_master_leases_on_owner_id"
   end
 
   create_table "owners", force: :cascade do |t|
@@ -45,6 +74,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_08_090053) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "rent_revisions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "master_lease_id", null: false
+    t.integer "new_rent"
+    t.text "notes"
+    t.integer "old_rent"
+    t.date "revision_date"
+    t.datetime "updated_at", null: false
+    t.index ["master_lease_id"], name: "index_rent_revisions_on_master_lease_id"
+  end
+
   create_table "rooms", force: :cascade do |t|
     t.decimal "area"
     t.bigint "building_id", null: false
@@ -60,5 +100,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_08_090053) do
   end
 
   add_foreign_key "buildings", "owners"
+  add_foreign_key "exemption_periods", "master_leases"
+  add_foreign_key "exemption_periods", "rooms"
+  add_foreign_key "master_leases", "buildings"
+  add_foreign_key "master_leases", "owners"
+  add_foreign_key "rent_revisions", "master_leases"
   add_foreign_key "rooms", "buildings"
 end
