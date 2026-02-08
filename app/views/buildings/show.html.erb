@@ -1,0 +1,57 @@
+<% content_for :title, @building.name %>
+
+<p class="notice"><%= notice %></p>
+
+<h1><%= @building.name %></h1>
+
+<table class="detail-table">
+  <tr><th>住所</th><td><%= @building.address %></td></tr>
+  <tr><th>構造</th><td><%= @building.building_type %></td></tr>
+  <tr><th>階数</th><td><%= @building.floors %></td></tr>
+  <tr><th>築年</th><td><%= @building.built_year %></td></tr>
+  <tr><th>最寄駅</th><td><%= @building.nearest_station %></td></tr>
+  <tr><th>備考</th><td><%= @building.notes %></td></tr>
+</table>
+
+<div class="actions-bar">
+  <%= link_to "編集", edit_building_path(@building), class: "btn" %>
+  <%= link_to "一覧に戻る", buildings_path, class: "btn" %>
+  <%= button_to "削除", @building, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "#{@building.name} を削除しますか？" } %>
+</div>
+
+<h2>部屋一覧</h2>
+
+<% if @building.rooms.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>部屋番号</th>
+        <th>階数</th>
+        <th>間取り</th>
+        <th>面積</th>
+        <th>賃料</th>
+        <th>状態</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @building.rooms.each do |room| %>
+        <tr>
+          <td><%= link_to room.room_number, room %></td>
+          <td><%= room.floor %></td>
+          <td><%= room.room_type %></td>
+          <td><%= "#{room.area} ㎡" if room.area %></td>
+          <td><%= number_to_currency(room.rent, unit: "¥", precision: 0) if room.rent %></td>
+          <td><%= room.status_label %></td>
+          <td class="actions">
+            <%= link_to "編集", edit_room_path(room) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>部屋が登録されていません。</p>
+<% end %>
+
+<%= link_to "この建物に部屋を追加", new_room_path(building_id: @building.id), class: "btn btn-primary" %>

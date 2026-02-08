@@ -4,7 +4,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Rental System POC — a Rails 8.1.2 monolith using Ruby 3.3.2, PostgreSQL, and Hotwire (Turbo + Stimulus). Currently a scaffolded POC with no domain models or routes yet.
+現行の賃貸管理システム（Java 6 / Oracle / 独自MBBフレームワーク）を Rails + PostgreSQL でリプレイスするための PoC。
+現行システムは 2,653ファイル / 835,115行、104画面、276テーブル（約480GB）の規模。
+
+技術スタック: Rails 8.1 / Ruby 3.3 / PostgreSQL 16 / Docker / AWS (EC2 + RDS) / GitHub Actions / Claude Code
+
+### 外部連携
+- OBIC7: FTP で会計仕訳データ連携（5本）
+- アプラス: ファイルで口座振替依頼・結果取込（2本）
+- GoWeb: ファイルでエンド契約データ出力
+- 保証会社: 保証会社連携管理
+
+### ドキュメント構成
+- `docs/01_investigation/` — 現行システム調査結果
+- `docs/02_plan/` — PoC計画・進め方
+- `docs/03_tech_reference/` — 技術参考資料
+- `docs/04_db_analysis/` — DB調査・分析結果
+- `docs/05_screenshots/` — 画面キャプチャ
 
 ## Common Commands
 
@@ -18,10 +34,11 @@ bin/dev                      # Alias for bin/rails server
 
 ### Testing
 ```bash
-bin/rails test                          # Run all tests (parallel, workers = CPU count)
-bin/rails test test/models/foo_test.rb  # Run a single test file
-bin/rails test test/models/foo_test.rb:42  # Run a specific test by line number
-bin/rails test:system                   # Run system tests (Capybara + Selenium)
+bundle exec rspec                        # Run all specs
+bundle exec rspec spec/models/           # Run model specs
+bundle exec rspec spec/requests/         # Run request specs
+bundle exec rspec spec/models/room_spec.rb       # Run a single spec file
+bundle exec rspec spec/models/room_spec.rb:10    # Run a specific example by line number
 ```
 
 ### Code Quality
@@ -54,7 +71,7 @@ bin/rails db:seed            # Load seed data
 - **Background jobs:** Solid Queue (database-backed, runs in Puma process via `SOLID_QUEUE_IN_PUMA`)
 - **Cache:** Solid Cache (database-backed in production, memory store in dev)
 - **Action Cable:** Solid Cable (database-backed)
-- **Testing:** Minitest with parallel execution, fixtures auto-loaded
+- **Testing:** RSpec + FactoryBot + shoulda-matchers
 - **Deployment:** Docker + Kamal; Dockerfile uses multi-stage build with jemalloc and Thruster
 
 ## Key Configuration
@@ -65,3 +82,15 @@ bin/rails db:seed            # Load seed data
 - CI sets `ENV['CI']` which enables eager loading in test environment
 - RuboCop uses `rubocop-rails-omakase` (Rails community conventions)
 - GitHub Actions CI runs: brakeman, importmap audit, rubocop, tests, and system tests (separate jobs)
+
+## Development Workflow
+
+TDD（テスト駆動開発）で進める。新しい機能・変更を実装する際は以下の順序に従うこと:
+
+1. **Red** — 先にテスト（spec）を書き、失敗することを確認する
+2. **Green** — テストが通る最小限の実装を行う
+3. **Refactor** — テストが通った状態でリファクタリングする
+
+- 実装コードを書く前に、必ず対応する spec を先に作成する
+- `bundle exec rspec` で全テスト通過を確認してから次のステップに進む
+- `bin/rubocop` で lint 違反がないことも合わせて確認する
