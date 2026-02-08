@@ -1,0 +1,51 @@
+<% content_for :title, "精算詳細" %>
+
+<h1>精算詳細</h1>
+
+<table class="detail-table">
+  <tr><th>建物</th><td><%= link_to @settlement.contract.room.building.name, @settlement.contract.room.building %></td></tr>
+  <tr><th>部屋</th><td><%= link_to @settlement.contract.room.room_number, @settlement.contract.room %></td></tr>
+  <tr><th>入居者</th><td><%= link_to @settlement.contract.tenant.name, @settlement.contract.tenant %></td></tr>
+  <tr><th>精算種別</th><td><%= @settlement.settlement_type_label %></td></tr>
+  <tr><th>解約日</th><td><%= @settlement.termination_date %></td></tr>
+  <tr><th>状態</th><td><%= @settlement.status_label %></td></tr>
+</table>
+
+<% if @settlement.tenant_rent? %>
+  <h2>賃料精算</h2>
+  <table class="detail-table">
+    <tr><th>月額賃料</th><td><%= number_to_currency(@settlement.contract.rent) if @settlement.contract.rent %></td></tr>
+    <tr><th>日割り賃料</th><td><%= number_to_currency(@settlement.daily_rent) if @settlement.daily_rent %></td></tr>
+    <tr><th>日割り日数</th><td><%= @settlement.days_count %>日</td></tr>
+    <tr><th>日割り金額</th><td><strong><%= number_to_currency(@settlement.prorated_rent) if @settlement.prorated_rent %></strong></td></tr>
+  </table>
+<% end %>
+
+<% if @settlement.tenant_deposit? %>
+  <h2>敷金精算</h2>
+  <table class="detail-table">
+    <tr><th>預かり敷金</th><td><%= number_to_currency(@settlement.deposit_amount) if @settlement.deposit_amount %></td></tr>
+    <tr><th>原状回復費用</th><td><%= number_to_currency(@settlement.restoration_cost) if @settlement.restoration_cost %></td></tr>
+    <tr><th>その他控除</th><td><%= number_to_currency(@settlement.other_deductions) if @settlement.other_deductions %></td></tr>
+    <tr><th>返還額</th><td>
+      <strong class="<%= @settlement.refund_amount&.negative? ? 'text-danger' : '' %>">
+        <%= number_to_currency(@settlement.refund_amount) if @settlement.refund_amount %>
+      </strong>
+      <% if @settlement.refund_amount&.negative? %>
+        <span class="text-danger">（追加請求）</span>
+      <% end %>
+    </td></tr>
+  </table>
+<% end %>
+
+<% if @settlement.notes.present? %>
+  <h2>備考</h2>
+  <p><%= @settlement.notes %></p>
+<% end %>
+
+<div class="actions-bar">
+  <%= link_to "編集", edit_settlement_path(@settlement), class: "btn" %>
+  <%= link_to "一覧に戻る", settlements_path, class: "btn" %>
+  <%= link_to "契約詳細", contract_path(@settlement.contract), class: "btn" %>
+  <%= button_to "削除", @settlement, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "この精算を削除しますか？" } %>
+</div>

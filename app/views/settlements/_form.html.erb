@@ -1,0 +1,66 @@
+<%= form_with(model: settlement) do |form| %>
+  <% if settlement.errors.any? %>
+    <div class="error-messages">
+      <h3><%= settlement.errors.count %>件のエラーがあります</h3>
+      <ul>
+        <% settlement.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :contract_id %>
+    <%= form.collection_select :contract_id, contracts, :id,
+          ->(c) { "#{c.room.building.name} #{c.room.room_number} — #{c.tenant.name}" },
+          { prompt: "選択してください" } %>
+  </div>
+
+  <div class="field">
+    <%= form.label :settlement_type %>
+    <%= form.select :settlement_type,
+          Settlement.settlement_types.keys.map { |k| [I18n.t("activerecord.enums.settlement.settlement_type.#{k}"), k] },
+          { prompt: "選択してください" } %>
+  </div>
+
+  <div class="field">
+    <%= form.label :termination_date %>
+    <%= form.date_field :termination_date %>
+  </div>
+
+  <fieldset class="settlement-deposit-fields">
+    <legend>敷金精算項目（敷金精算の場合のみ入力）</legend>
+
+    <div class="field">
+      <%= form.label :deposit_amount %>
+      <%= form.number_field :deposit_amount %>
+    </div>
+
+    <div class="field">
+      <%= form.label :restoration_cost %>
+      <%= form.number_field :restoration_cost %>
+    </div>
+
+    <div class="field">
+      <%= form.label :other_deductions %>
+      <%= form.number_field :other_deductions %>
+    </div>
+  </fieldset>
+
+  <div class="field">
+    <%= form.label :status %>
+    <%= form.select :status,
+          Settlement.statuses.keys.map { |k| [I18n.t("activerecord.enums.settlement.status.#{k}"), k] } %>
+  </div>
+
+  <div class="field">
+    <%= form.label :notes %>
+    <%= form.text_area :notes, rows: 3 %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit class: "btn btn-primary" %>
+    <%= link_to "キャンセル", settlements_path, class: "btn" %>
+  </div>
+<% end %>

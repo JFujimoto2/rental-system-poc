@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_08_095607) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_08_124959) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -134,6 +134,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_08_095607) do
     t.index ["building_id"], name: "index_rooms_on_building_id"
   end
 
+  create_table "settlements", force: :cascade do |t|
+    t.bigint "contract_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "daily_rent"
+    t.integer "days_count"
+    t.integer "deposit_amount"
+    t.text "notes"
+    t.integer "other_deductions"
+    t.integer "prorated_rent"
+    t.integer "refund_amount"
+    t.integer "restoration_cost"
+    t.integer "settlement_type"
+    t.integer "status"
+    t.date "termination_date"
+    t.datetime "updated_at", null: false
+    t.index ["contract_id"], name: "index_settlements_on_contract_id"
+  end
+
   create_table "tenant_payments", force: :cascade do |t|
     t.integer "amount"
     t.bigint "contract_id", null: false
@@ -182,5 +200,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_08_095607) do
   add_foreign_key "owner_payments", "master_leases"
   add_foreign_key "rent_revisions", "master_leases"
   add_foreign_key "rooms", "buildings"
+  add_foreign_key "settlements", "contracts"
   add_foreign_key "tenant_payments", "contracts"
 end

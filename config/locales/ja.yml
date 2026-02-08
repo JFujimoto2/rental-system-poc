@@ -123,6 +123,20 @@ ja:
         paid_date: 支払日
         status: 状態
         notes: 備考
+      settlement:
+        contract: 転貸借契約
+        contract_id: 転貸借契約
+        settlement_type: 精算種別
+        termination_date: 解約日
+        daily_rent: 日割り賃料
+        days_count: 日割り日数
+        prorated_rent: 日割り金額
+        deposit_amount: 預かり敷金
+        restoration_cost: 原状回復費用
+        other_deductions: その他控除
+        refund_amount: 返還額
+        status: 状態
+        notes: 備考
       user:
         provider: 認証プロバイダ
         uid: ユーザーID
@@ -167,6 +181,14 @@ ja:
         status:
           unpaid: 未払
           paid: 支払済
+      settlement:
+        settlement_type:
+          tenant_rent: 賃料精算
+          tenant_deposit: 敷金精算
+        status:
+          draft: 下書き
+          confirmed: 確定
+          paid: 精算済
       user:
         role:
           admin: 管理者

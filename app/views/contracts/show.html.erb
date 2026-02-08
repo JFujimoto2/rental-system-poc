@@ -23,6 +23,7 @@
 <div class="actions-bar">
   <%= link_to "編集", edit_contract_path(@contract), class: "btn" %>
   <%= link_to "一覧に戻る", contracts_path, class: "btn" %>
+  <%= link_to "精算作成", new_settlement_path(contract_id: @contract.id), class: "btn" %>
   <%= button_to "削除", @contract, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "この契約を削除しますか？" } %>
 </div>
 
@@ -55,4 +56,39 @@
   </table>
 <% else %>
   <p>テナント入金履歴がありません。</p>
+<% end %>
+
+<h2>精算履歴</h2>
+
+<% if @contract.settlements.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>精算種別</th>
+        <th>解約日</th>
+        <th>精算額</th>
+        <th>状態</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @contract.settlements.order(created_at: :desc).each do |settlement| %>
+        <tr>
+          <td><%= settlement.settlement_type_label %></td>
+          <td><%= settlement.termination_date %></td>
+          <td>
+            <% if settlement.tenant_rent? %>
+              <%= number_to_currency(settlement.prorated_rent) if settlement.prorated_rent %>
+            <% else %>
+              <%= number_to_currency(settlement.refund_amount) if settlement.refund_amount %>
+            <% end %>
+          </td>
+          <td><%= settlement.status_label %></td>
+          <td><%= link_to "詳細", settlement %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>精算履歴がありません。</p>
 <% end %>

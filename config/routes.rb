@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   resources :owners
   resources :users, only: [ :index, :edit, :update ]
 
+  resources :settlements
   resources :delinquencies, only: [ :index ]
 
   resources :bulk_clearings, only: [ :new, :create ] do

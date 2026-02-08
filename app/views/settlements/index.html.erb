@@ -1,0 +1,41 @@
+<div class="page-header">
+  <h1>精算一覧</h1>
+  <div class="page-header-actions">
+    <%= link_to "新規精算作成", new_settlement_path, class: "btn btn-primary" %>
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>建物</th>
+      <th>部屋</th>
+      <th>入居者</th>
+      <th>精算種別</th>
+      <th>解約日</th>
+      <th>精算額</th>
+      <th>状態</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @settlements.each do |settlement| %>
+      <tr>
+        <td><%= settlement.contract.room.building.name %></td>
+        <td><%= settlement.contract.room.room_number %></td>
+        <td><%= link_to settlement.contract.tenant.name, settlement.contract.tenant %></td>
+        <td><%= settlement.settlement_type_label %></td>
+        <td><%= settlement.termination_date %></td>
+        <td>
+          <% if settlement.tenant_rent? %>
+            <%= number_to_currency(settlement.prorated_rent) if settlement.prorated_rent %>
+          <% else %>
+            <%= number_to_currency(settlement.refund_amount) if settlement.refund_amount %>
+          <% end %>
+        </td>
+        <td><%= settlement.status_label %></td>
+        <td><%= link_to "詳細", settlement %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
