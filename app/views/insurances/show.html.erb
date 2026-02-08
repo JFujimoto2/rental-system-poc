@@ -1,0 +1,23 @@
+<% content_for :title, "保険詳細" %>
+
+<h1>保険詳細</h1>
+
+<table class="detail-table">
+  <tr><th>建物</th><td><%= link_to @insurance.building.name, @insurance.building if @insurance.building %></td></tr>
+  <tr><th>部屋</th><td><%= link_to "#{@insurance.room.building.name} #{@insurance.room.room_number}", @insurance.room if @insurance.room %></td></tr>
+  <tr><th>保険種別</th><td><%= @insurance.insurance_type_label %></td></tr>
+  <tr><th>状態</th><td><%= @insurance.status_label %></td></tr>
+  <tr><th>証券番号</th><td><%= @insurance.policy_number %></td></tr>
+  <tr><th>保険会社名</th><td><%= @insurance.provider %></td></tr>
+  <tr><th>補償額</th><td><%= number_to_currency(@insurance.coverage_amount, unit: "¥", precision: 0) if @insurance.coverage_amount %></td></tr>
+  <tr><th>保険料</th><td><%= number_to_currency(@insurance.premium, unit: "¥", precision: 0) if @insurance.premium %></td></tr>
+  <tr><th>開始日</th><td><%= @insurance.start_date %></td></tr>
+  <tr><th>終了日</th><td><%= @insurance.end_date %></td></tr>
+  <tr><th>備考</th><td><%= @insurance.notes %></td></tr>
+</table>
+
+<div class="actions-bar">
+  <%= link_to "編集", edit_insurance_path(@insurance), class: "btn" %>
+  <%= link_to "一覧に戻る", insurances_path, class: "btn" %>
+  <%= button_to "削除", @insurance, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "#{@insurance.policy_number} を削除しますか？" } %>
+</div>

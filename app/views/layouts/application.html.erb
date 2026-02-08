@@ -33,6 +33,12 @@
               <ul class="nav-dropdown">
                 <li><%= link_to "建物一覧", buildings_path %></li>
                 <li><%= link_to "部屋一覧", rooms_path %></li>
+                <li class="nav-divider"></li>
+                <li><%= link_to "業者一覧", vendors_path %></li>
+                <li><%= link_to "工事一覧", constructions_path %></li>
+                <li class="nav-divider"></li>
+                <li><%= link_to "鍵管理", keys_path %></li>
+                <li><%= link_to "保険一覧", insurances_path %></li>
               </ul>
             </div>
             <div class="nav-group">
@@ -43,6 +49,7 @@
                 <li class="nav-divider"></li>
                 <li><%= link_to "入居者一覧", tenants_path %></li>
                 <li><%= link_to "転貸借契約", contracts_path %></li>
+                <li><%= link_to "契約更新", contract_renewals_path %></li>
                 <li><%= link_to "精算一覧", settlements_path %></li>
               </ul>
             </div>
@@ -54,6 +61,12 @@
                 <li class="nav-divider"></li>
                 <li><%= link_to "滞納一覧", delinquencies_path %></li>
                 <li><%= link_to "入金一括消込", new_bulk_clearing_path %></li>
+              </ul>
+            </div>
+            <div class="nav-group">
+              <button type="button" class="nav-group-label">サポート</button>
+              <ul class="nav-dropdown">
+                <li><%= link_to "問い合わせ一覧", inquiries_path %></li>
               </ul>
             </div>
             <div class="nav-group">

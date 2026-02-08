@@ -1,0 +1,9 @@
+<% content_for :title, "保険登録" %>
+
+<h1>保険登録</h1>
+
+<%= render "form", insurance: @insurance %>
+
+<div>
+  <%= link_to "一覧に戻る", insurances_path %>
+</div>

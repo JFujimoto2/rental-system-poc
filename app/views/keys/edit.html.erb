@@ -1,0 +1,10 @@
+<% content_for :title, "鍵編集" %>
+
+<h1>鍵編集</h1>
+
+<%= render "form", key: @key %>
+
+<div>
+  <%= link_to "詳細に戻る", @key %> |
+  <%= link_to "一覧に戻る", keys_path %>
+</div>

@@ -1,0 +1,64 @@
+<% content_for :title, "契約更新一覧" %>
+
+<div class="page-header">
+  <h1>契約更新一覧</h1>
+  <div class="page-header-actions">
+    <%= link_to "CSV ダウンロード", contract_renewals_path(format: :csv, q: @search_params.to_h), class: "btn" %>
+    <%= link_to "新規契約更新登録", new_contract_renewal_path, class: "btn btn-primary" %>
+  </div>
+</div>
+
+<%= form_with(url: contract_renewals_path, method: :get, class: "search-form", data: { turbo_action: "replace" }) do |form| %>
+  <div class="search-fields">
+    <div class="search-field">
+      <label>建物名</label>
+      <%= form.text_field "q[building_name]", value: @search_params[:building_name] %>
+    </div>
+    <div class="search-field">
+      <label>入居者名</label>
+      <%= form.text_field "q[tenant_name]", value: @search_params[:tenant_name] %>
+    </div>
+    <div class="search-field">
+      <label>状態</label>
+      <%= form.select "q[status]", ContractRenewal.statuses.keys.map { |s| [I18n.t("activerecord.enums.contract_renewal.status.#{s}"), s] }, { include_blank: "すべて" }, { value: @search_params[:status] } %>
+    </div>
+    <div class="search-actions">
+      <%= form.submit "検索", class: "btn btn-primary" %>
+      <%= link_to "クリア", contract_renewals_path, class: "btn" %>
+    </div>
+  </div>
+<% end %>
+
+<p class="search-result-count"><%= @contract_renewals.size %>件</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>建物名</th>
+      <th>部屋番号</th>
+      <th>入居者名</th>
+      <th>状態</th>
+      <th>更新日</th>
+      <th>現在賃料</th>
+      <th>提案賃料</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @contract_renewals.each do |contract_renewal| %>
+      <tr>
+        <td><%= contract_renewal.contract.room.building.name %></td>
+        <td><%= contract_renewal.contract.room.room_number %></td>
+        <td><%= link_to contract_renewal.contract.tenant.name, contract_renewal.contract.tenant %></td>
+        <td><%= link_to contract_renewal.status_label, contract_renewal %></td>
+        <td><%= contract_renewal.renewal_date %></td>
+        <td><%= number_to_currency(contract_renewal.current_rent, unit: "¥", precision: 0) if contract_renewal.current_rent %></td>
+        <td><%= number_to_currency(contract_renewal.proposed_rent, unit: "¥", precision: 0) if contract_renewal.proposed_rent %></td>
+        <td class="actions">
+          <%= link_to "詳細", contract_renewal %>
+          <%= link_to "編集", edit_contract_renewal_path(contract_renewal) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -55,6 +55,39 @@
   </table>
 <% end %>
 
+<h2>更新履歴</h2>
+
+<% if @contract.contract_renewals.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>状態</th>
+        <th>更新日</th>
+        <th>現在賃料</th>
+        <th>提案賃料</th>
+        <th>更新料</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @contract.contract_renewals.order(created_at: :desc).each do |renewal| %>
+        <tr>
+          <td><%= renewal.status_label %></td>
+          <td><%= renewal.renewal_date %></td>
+          <td><%= number_to_currency(renewal.current_rent, unit: "¥", precision: 0) if renewal.current_rent %></td>
+          <td><%= number_to_currency(renewal.proposed_rent, unit: "¥", precision: 0) if renewal.proposed_rent %></td>
+          <td><%= number_to_currency(renewal.renewal_fee, unit: "¥", precision: 0) if renewal.renewal_fee %></td>
+          <td><%= link_to "詳細", renewal %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>更新履歴がありません。</p>
+<% end %>
+
+<%= link_to "契約更新を作成", new_contract_renewal_path(contract_id: @contract.id), class: "btn" %>
+
 <h2>テナント入金履歴</h2>
 
 <% if @contract.tenant_payments.any? %>

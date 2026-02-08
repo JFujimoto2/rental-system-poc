@@ -1,0 +1,60 @@
+<%= form_with(model: contract_renewal) do |form| %>
+  <% if contract_renewal.errors.any? %>
+    <div class="error-messages">
+      <h2><%= contract_renewal.errors.count %>件のエラーがあります</h2>
+      <ul>
+        <% contract_renewal.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :contract_id %>
+    <%= form.collection_select :contract_id,
+      Contract.includes(:tenant, room: :building).order("buildings.name, rooms.room_number").map { |c| ["#{c.room.building.name} #{c.room.room_number} — #{c.tenant.name}", c.id] },
+      :last, :first, { prompt: "選択してください" } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :status %>
+    <%= form.select :status,
+          ContractRenewal.statuses.keys.map { |k| [I18n.t("activerecord.enums.contract_renewal.status.#{k}"), k] },
+          { prompt: "選択してください" } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :renewal_date %>
+    <%= form.date_field :renewal_date %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :current_rent %>
+    <%= form.number_field :current_rent %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :proposed_rent %>
+    <%= form.number_field :proposed_rent %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :renewal_fee %>
+    <%= form.number_field :renewal_fee %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :tenant_notified_on %>
+    <%= form.date_field :tenant_notified_on %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :notes %>
+    <%= form.text_area :notes, rows: 3 %>
+  </div>
+
+  <div class="form-actions">
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+<% end %>

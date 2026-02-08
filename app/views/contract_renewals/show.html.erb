@@ -1,0 +1,21 @@
+<% content_for :title, "契約更新詳細" %>
+
+<h1>契約更新詳細</h1>
+
+<table class="detail-table">
+  <tr><th>元の契約</th><td><%= link_to "#{@contract_renewal.contract.room.building.name} #{@contract_renewal.contract.room.room_number} — #{@contract_renewal.contract.tenant.name}", @contract_renewal.contract %></td></tr>
+  <tr><th>更新後の契約</th><td><%= link_to "#{@contract_renewal.new_contract.room.building.name} #{@contract_renewal.new_contract.room.room_number} — #{@contract_renewal.new_contract.tenant.name}", @contract_renewal.new_contract if @contract_renewal.new_contract %></td></tr>
+  <tr><th>状態</th><td><%= @contract_renewal.status_label %></td></tr>
+  <tr><th>更新日</th><td><%= @contract_renewal.renewal_date %></td></tr>
+  <tr><th>現在賃料</th><td><%= number_to_currency(@contract_renewal.current_rent, unit: "¥", precision: 0) if @contract_renewal.current_rent %></td></tr>
+  <tr><th>提案賃料</th><td><%= number_to_currency(@contract_renewal.proposed_rent, unit: "¥", precision: 0) if @contract_renewal.proposed_rent %></td></tr>
+  <tr><th>更新料</th><td><%= number_to_currency(@contract_renewal.renewal_fee, unit: "¥", precision: 0) if @contract_renewal.renewal_fee %></td></tr>
+  <tr><th>入居者通知日</th><td><%= @contract_renewal.tenant_notified_on %></td></tr>
+  <tr><th>備考</th><td><%= @contract_renewal.notes %></td></tr>
+</table>
+
+<div class="actions-bar">
+  <%= link_to "編集", edit_contract_renewal_path(@contract_renewal), class: "btn" %>
+  <%= link_to "一覧に戻る", contract_renewals_path, class: "btn" %>
+  <%= button_to "削除", @contract_renewal, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "この契約更新を削除しますか？" } %>
+</div>

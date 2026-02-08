@@ -34,8 +34,11 @@ class Approval < ApplicationRecord
   private
 
   def activate_approvable!
-    return unless approvable.is_a?(Contract)
-
-    approvable.update!(status: :active)
+    case approvable
+    when Contract
+      approvable.update!(status: :active)
+    when Construction
+      approvable.update!(status: :ordered)
+    end
   end
 end

@@ -1,0 +1,10 @@
+<% content_for :title, "問い合わせ編集" %>
+
+<h1>問い合わせ編集</h1>
+
+<%= render "form", inquiry: @inquiry %>
+
+<div class="actions-bar">
+  <%= link_to "詳細に戻る", @inquiry, class: "btn" %>
+  <%= link_to "一覧に戻る", inquiries_path, class: "btn" %>
+</div>

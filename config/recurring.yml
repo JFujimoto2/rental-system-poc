@@ -21,7 +21,15 @@ production:
     class: OverdueDetectionJob
     schedule: at 0:15 every day
 
+  insurance_expiration:
+    class: InsuranceExpirationJob
+    schedule: at 0:25 every day
+
   # === 月次バッチ ===
+
+  contract_renewal_reminder:
+    class: ContractRenewalReminderJob
+    schedule: at 0:20 on the 1st of every month
 
   monthly_payment_generation:
     class: MonthlyPaymentGenerationJob

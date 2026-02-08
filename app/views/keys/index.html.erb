@@ -1,0 +1,64 @@
+<% content_for :title, "鍵一覧" %>
+
+<div class="page-header">
+  <h1>鍵一覧</h1>
+  <div class="page-header-actions">
+    <%= link_to "CSV ダウンロード", keys_path(format: :csv, q: @search_params.to_h), class: "btn" %>
+    <%= link_to "新規鍵登録", new_key_path, class: "btn btn-primary" %>
+  </div>
+</div>
+
+<%= form_with(url: keys_path, method: :get, class: "search-form", data: { turbo_action: "replace" }) do |form| %>
+  <div class="search-fields">
+    <div class="search-field">
+      <label>建物名</label>
+      <%= form.text_field "q[building_name]", value: @search_params[:building_name] %>
+    </div>
+    <div class="search-field">
+      <label>部屋番号</label>
+      <%= form.text_field "q[room_number]", value: @search_params[:room_number] %>
+    </div>
+    <div class="search-field">
+      <label>鍵種別</label>
+      <%= form.select "q[key_type]", Key.key_types.keys.map { |s| [I18n.t("activerecord.enums.key.key_type.#{s}"), s] }, { include_blank: "すべて" }, { value: @search_params[:key_type] } %>
+    </div>
+    <div class="search-field">
+      <label>状態</label>
+      <%= form.select "q[status]", Key.statuses.keys.map { |s| [I18n.t("activerecord.enums.key.status.#{s}"), s] }, { include_blank: "すべて" }, { value: @search_params[:status] } %>
+    </div>
+    <div class="search-actions">
+      <%= form.submit "検索", class: "btn btn-primary" %>
+      <%= link_to "クリア", keys_path, class: "btn" %>
+    </div>
+  </div>
+<% end %>
+
+<p class="search-result-count"><%= @keys.size %>件</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>建物名</th>
+      <th>部屋番号</th>
+      <th>鍵種別</th>
+      <th>鍵番号</th>
+      <th>状態</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @keys.each do |key| %>
+      <tr>
+        <td><%= key.room.building.name %></td>
+        <td><%= key.room.room_number %></td>
+        <td><%= key.key_type_label %></td>
+        <td><%= key.key_number %></td>
+        <td><%= link_to key.status_label, key %></td>
+        <td class="actions">
+          <%= link_to "編集", edit_key_path(key) %>
+          <%= button_to "削除", key, method: :delete, class: "btn-link btn-danger", data: { turbo_confirm: "#{key.key_number} を削除しますか？" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

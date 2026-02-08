@@ -3,6 +3,8 @@ module ApplicationHelper
     case approvable
     when Contract
       "#{approvable.room&.building&.name} #{approvable.room&.room_number} — #{approvable.tenant&.name}"
+    when Construction
+      "#{approvable.room&.building&.name} #{approvable.room&.room_number} — #{approvable.title}"
     else
       approvable.to_s
     end

@@ -1,0 +1,71 @@
+<%= form_with(model: insurance) do |form| %>
+  <% if insurance.errors.any? %>
+    <div class="error-messages">
+      <h2><%= insurance.errors.count %>件のエラーがあります</h2>
+      <ul>
+        <% insurance.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :building_id %>
+    <%= form.collection_select :building_id, Building.order(:name), :id, :name, include_blank: "選択してください" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :room_id %>
+    <%= form.select :room_id, Room.includes(:building).map { |r| ["#{r.building.name} #{r.room_number}", r.id] }, include_blank: "選択してください" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :insurance_type %>
+    <%= form.select :insurance_type, Insurance.insurance_types.keys.map { |s| [I18n.t("activerecord.enums.insurance.insurance_type.#{s}"), s] }, include_blank: "選択してください" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :status %>
+    <%= form.select :status, Insurance.statuses.keys.map { |s| [I18n.t("activerecord.enums.insurance.status.#{s}"), s] }, include_blank: "選択してください" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :policy_number %>
+    <%= form.text_field :policy_number %>
+  </div>
+
+  <div class="field">
+    <%= form.label :provider %>
+    <%= form.text_field :provider %>
+  </div>
+
+  <div class="field">
+    <%= form.label :coverage_amount %>
+    <%= form.number_field :coverage_amount %>
+  </div>
+
+  <div class="field">
+    <%= form.label :premium %>
+    <%= form.number_field :premium %>
+  </div>
+
+  <div class="field">
+    <%= form.label :start_date %>
+    <%= form.date_field :start_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :end_date %>
+    <%= form.date_field :end_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :notes %>
+    <%= form.textarea :notes, rows: 4 %>
+  </div>
+
+  <div class="form-actions">
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+<% end %>

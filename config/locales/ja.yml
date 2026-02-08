@@ -18,6 +18,13 @@ ja:
       tenant_payment: テナント入金
       owner_payment: オーナー支払
       user: ユーザー
+      vendor: 業者
+      construction: 工事
+      contract_renewal: 契約更新
+      inquiry: 問い合わせ
+      key: 鍵
+      key_history: 鍵履歴
+      insurance: 保険
     attributes:
       building:
         name: 建物名
@@ -143,6 +150,89 @@ ja:
         name: 名前
         email: メールアドレス
         role: ロール
+      vendor:
+        name: 業者名
+        phone: 電話番号
+        email: メールアドレス
+        address: 住所
+        contact_person: 担当者名
+        notes: 備考
+      construction:
+        room: 部屋
+        room_id: 部屋
+        vendor: 業者
+        vendor_id: 業者
+        construction_type: 工事種別
+        status: 状態
+        title: 工事件名
+        description: 工事内容
+        estimated_cost: 見積金額
+        actual_cost: 実績金額
+        scheduled_start_date: 工事予定開始日
+        scheduled_end_date: 工事予定完了日
+        actual_start_date: 実績開始日
+        actual_end_date: 実績完了日
+        cost_bearer: 費用負担
+        notes: 備考
+      contract_renewal:
+        contract: 元の契約
+        contract_id: 元の契約
+        new_contract: 更新後の契約
+        new_contract_id: 更新後の契約
+        status: 状態
+        renewal_date: 更新日
+        current_rent: 現在賃料
+        proposed_rent: 提案賃料
+        renewal_fee: 更新料
+        tenant_notified_on: 入居者通知日
+        notes: 備考
+      inquiry:
+        room: 部屋
+        room_id: 部屋
+        tenant: 入居者
+        tenant_id: 入居者
+        assigned_user: 担当者
+        assigned_user_id: 担当者
+        construction: 関連工事
+        construction_id: 関連工事
+        category: カテゴリ
+        priority: 優先度
+        status: 状態
+        title: 件名
+        description: 内容
+        response: 対応内容
+        received_on: 受付日
+        resolved_on: 解決日
+        notes: 備考
+      key:
+        room: 部屋
+        room_id: 部屋
+        key_type: 鍵種別
+        key_number: 鍵番号
+        status: 状態
+        notes: 備考
+      key_history:
+        key: 鍵
+        key_id: 鍵
+        tenant: 入居者
+        tenant_id: 入居者
+        action: アクション
+        acted_on: 実施日
+        notes: 備考
+      insurance:
+        building: 建物
+        building_id: 建物
+        room: 部屋
+        room_id: 部屋
+        insurance_type: 保険種別
+        status: 状態
+        policy_number: 証券番号
+        provider: 保険会社名
+        coverage_amount: 補償額
+        premium: 保険料
+        start_date: 開始日
+        end_date: 終了日
+        notes: 備考
       approval:
         approvable: 承認対象
         requester: 申請者
@@ -197,6 +287,82 @@ ja:
           draft: 下書き
           confirmed: 確定
           paid: 精算済
+      construction:
+        construction_type:
+          restoration: 原状回復
+          renovation: リノベーション
+          repair: 修繕
+          equipment: 設備交換
+          other: その他
+        status:
+          draft: 下書き
+          ordered: 発注済
+          in_progress: 施工中
+          completed: 完了
+          invoiced: 請求済
+          cancelled: キャンセル
+        cost_bearer:
+          company: 自社負担
+          owner: オーナー負担
+          tenant: 入居者負担
+      contract_renewal:
+        status:
+          pending: 未着手
+          notified: 通知済
+          negotiating: 交渉中
+          agreed: 合意
+          renewed: 更新完了
+          declined: 辞退
+          cancelled: キャンセル
+      inquiry:
+        category:
+          repair: 修繕依頼
+          complaint: クレーム
+          question: 質問
+          noise: 騒音
+          leak: 漏水
+          other: その他
+        priority:
+          low: 低
+          normal: 通常
+          high: 高
+          urgent: 緊急
+        status:
+          received: 受付
+          assigned: 担当割当
+          in_progress: 対応中
+          completed: 完了
+          closed: クローズ
+      key:
+        key_type:
+          main: 本鍵
+          duplicate: 合鍵
+          spare: スペア
+          mailbox: 郵便受け
+          auto_lock: オートロック
+        status:
+          in_stock: 在庫
+          issued: 貸出中
+          lost: 紛失
+          disposed: 廃棄
+      key_history:
+        action:
+          issued: 貸出
+          returned: 返却
+          lost_reported: 紛失届
+          replaced: 交換
+      insurance:
+        insurance_type:
+          fire: 火災保険
+          earthquake: 地震保険
+          tenant_liability: 借家人賠償
+          facility_liability: 施設賠償
+          other: その他
+        status:
+          active: 有効
+          expiring_soon: 期限間近
+          expired: 期限切れ
+          cancelled: 解約
       approval:
         status:
           pending: 承認待ち

@@ -1,0 +1,25 @@
+<% content_for :title, "問い合わせ詳細" %>
+
+<h1>問い合わせ詳細</h1>
+
+<table class="detail-table">
+  <tr><th>建物・部屋</th><td><%= link_to "#{@inquiry.room.building.name} #{@inquiry.room.room_number}", @inquiry.room if @inquiry.room %></td></tr>
+  <tr><th>入居者</th><td><%= link_to @inquiry.tenant.name, @inquiry.tenant if @inquiry.tenant %></td></tr>
+  <tr><th>担当者</th><td><%= link_to @inquiry.assigned_user.name, @inquiry.assigned_user if @inquiry.assigned_user %></td></tr>
+  <tr><th>工事</th><td><%= link_to @inquiry.construction.title, @inquiry.construction if @inquiry.construction %></td></tr>
+  <tr><th>カテゴリ</th><td><%= @inquiry.category_label %></td></tr>
+  <tr><th>優先度</th><td><%= @inquiry.priority_label %></td></tr>
+  <tr><th>状態</th><td><%= @inquiry.status_label %></td></tr>
+  <tr><th>件名</th><td><%= @inquiry.title %></td></tr>
+  <tr><th>内容</th><td><%= @inquiry.description %></td></tr>
+  <tr><th>対応内容</th><td><%= @inquiry.response %></td></tr>
+  <tr><th>受付日</th><td><%= @inquiry.received_on %></td></tr>
+  <tr><th>解決日</th><td><%= @inquiry.resolved_on %></td></tr>
+  <tr><th>備考</th><td><%= @inquiry.notes %></td></tr>
+</table>
+
+<div class="actions-bar">
+  <%= link_to "編集", edit_inquiry_path(@inquiry), class: "btn" %>
+  <%= link_to "一覧に戻る", inquiries_path, class: "btn" %>
+  <%= button_to "削除", @inquiry, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "この問い合わせを削除しますか？" } %>
+</div>

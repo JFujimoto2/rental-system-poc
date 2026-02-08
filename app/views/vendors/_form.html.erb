@@ -1,0 +1,46 @@
+<%= form_with(model: vendor) do |form| %>
+  <% if vendor.errors.any? %>
+    <div class="error-messages">
+      <h2><%= vendor.errors.count %>件のエラーがあります</h2>
+      <ul>
+        <% vendor.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :phone %>
+    <%= form.text_field :phone %>
+  </div>
+
+  <div class="field">
+    <%= form.label :email %>
+    <%= form.email_field :email %>
+  </div>
+
+  <div class="field">
+    <%= form.label :address %>
+    <%= form.text_field :address %>
+  </div>
+
+  <div class="field">
+    <%= form.label :contact_person %>
+    <%= form.text_field :contact_person %>
+  </div>
+
+  <div class="field">
+    <%= form.label :notes %>
+    <%= form.textarea :notes, rows: 4 %>
+  </div>
+
+  <div class="form-actions">
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+<% end %>

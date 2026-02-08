@@ -1,0 +1,26 @@
+<% content_for :title, "工事詳細" %>
+
+<h1>工事詳細</h1>
+
+<table class="detail-table">
+  <tr><th>部屋</th><td><%= link_to "#{@construction.room.building.name} #{@construction.room.room_number}", @construction.room %></td></tr>
+  <tr><th>業者</th><td><%= link_to @construction.vendor.name, @construction.vendor if @construction.vendor %></td></tr>
+  <tr><th>工事種別</th><td><%= @construction.construction_type_label %></td></tr>
+  <tr><th>状態</th><td><%= @construction.status_label %></td></tr>
+  <tr><th>工事件名</th><td><%= @construction.title %></td></tr>
+  <tr><th>工事内容</th><td><%= @construction.description %></td></tr>
+  <tr><th>見積金額</th><td><%= number_to_currency(@construction.estimated_cost, unit: "¥", precision: 0) if @construction.estimated_cost %></td></tr>
+  <tr><th>実績金額</th><td><%= number_to_currency(@construction.actual_cost, unit: "¥", precision: 0) if @construction.actual_cost %></td></tr>
+  <tr><th>工事予定開始日</th><td><%= @construction.scheduled_start_date %></td></tr>
+  <tr><th>工事予定完了日</th><td><%= @construction.scheduled_end_date %></td></tr>
+  <tr><th>実績開始日</th><td><%= @construction.actual_start_date %></td></tr>
+  <tr><th>実績完了日</th><td><%= @construction.actual_end_date %></td></tr>
+  <tr><th>費用負担</th><td><%= @construction.cost_bearer_label %></td></tr>
+  <tr><th>備考</th><td><%= @construction.notes %></td></tr>
+</table>
+
+<div class="actions-bar">
+  <%= link_to "編集", edit_construction_path(@construction), class: "btn" %>
+  <%= link_to "一覧に戻る", constructions_path, class: "btn" %>
+  <%= button_to "削除", @construction, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "#{@construction.title} を削除しますか？" } %>
+</div>

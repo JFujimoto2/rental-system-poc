@@ -50,3 +50,63 @@
 <% else %>
   <p>契約履歴がありません。</p>
 <% end %>
+
+<h2>工事履歴</h2>
+
+<% if @room.constructions.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>工事件名</th>
+        <th>工事種別</th>
+        <th>業者</th>
+        <th>見積金額</th>
+        <th>実績金額</th>
+        <th>状態</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @room.constructions.includes(:vendor).order(created_at: :desc).each do |construction| %>
+        <tr>
+          <td><%= link_to construction.title, construction %></td>
+          <td><%= construction.construction_type_label %></td>
+          <td><%= link_to construction.vendor.name, construction.vendor if construction.vendor %></td>
+          <td><%= number_to_currency(construction.estimated_cost, unit: "¥", precision: 0) if construction.estimated_cost %></td>
+          <td><%= number_to_currency(construction.actual_cost, unit: "¥", precision: 0) if construction.actual_cost %></td>
+          <td><%= construction.status_label %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>工事履歴がありません。</p>
+<% end %>
+
+<%= link_to "この部屋に工事を追加", new_construction_path(room_id: @room.id), class: "btn btn-primary" %>
+
+<h2>鍵一覧</h2>
+
+<% if @room.keys.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>鍵種別</th>
+        <th>鍵番号</th>
+        <th>状態</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @room.keys.each do |key| %>
+        <tr>
+          <td><%= link_to key.key_type_label, key %></td>
+          <td><%= key.key_number %></td>
+          <td><%= key.status_label %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>鍵が登録されていません。</p>
+<% end %>
+
+<%= link_to "この部屋に鍵を追加", new_key_path(room_id: @room.id), class: "btn btn-primary" %>

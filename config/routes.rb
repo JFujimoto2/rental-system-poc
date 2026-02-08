@@ -11,6 +11,13 @@ Rails.application.routes.draw do
 
   resources :settlements
 
+  resources :vendors
+  resources :constructions
+  resources :contract_renewals
+  resources :inquiries
+  resources :keys
+  resources :insurances
+
   resources :approvals, only: [ :index, :show ] do
     collection do
       get :my_requests

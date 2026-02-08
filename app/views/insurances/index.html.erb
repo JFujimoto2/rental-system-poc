@@ -1,0 +1,74 @@
+<% content_for :title, "保険一覧" %>
+
+<div class="page-header">
+  <h1>保険一覧</h1>
+  <div class="page-header-actions">
+    <%= link_to "CSV ダウンロード", insurances_path(format: :csv, q: @search_params.to_h), class: "btn" %>
+    <%= link_to "新規保険登録", new_insurance_path, class: "btn btn-primary" %>
+  </div>
+</div>
+
+<%= form_with(url: insurances_path, method: :get, class: "search-form", data: { turbo_action: "replace" }) do |form| %>
+  <div class="search-fields">
+    <div class="search-field">
+      <label>建物名</label>
+      <%= form.text_field "q[building_name]", value: @search_params[:building_name] %>
+    </div>
+    <div class="search-field">
+      <label>保険種別</label>
+      <%= form.select "q[insurance_type]", Insurance.insurance_types.keys.map { |s| [I18n.t("activerecord.enums.insurance.insurance_type.#{s}"), s] }, { include_blank: "すべて" }, { value: @search_params[:insurance_type] } %>
+    </div>
+    <div class="search-field">
+      <label>状態</label>
+      <%= form.select "q[status]", Insurance.statuses.keys.map { |s| [I18n.t("activerecord.enums.insurance.status.#{s}"), s] }, { include_blank: "すべて" }, { value: @search_params[:status] } %>
+    </div>
+    <div class="search-field">
+      <label>保険会社名</label>
+      <%= form.text_field "q[provider]", value: @search_params[:provider] %>
+    </div>
+    <div class="search-actions">
+      <%= form.submit "検索", class: "btn btn-primary" %>
+      <%= link_to "クリア", insurances_path, class: "btn" %>
+    </div>
+  </div>
+<% end %>
+
+<p class="search-result-count"><%= @insurances.size %>件</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>建物名</th>
+      <th>部屋番号</th>
+      <th>保険種別</th>
+      <th>状態</th>
+      <th>証券番号</th>
+      <th>保険会社名</th>
+      <th>補償額</th>
+      <th>保険料</th>
+      <th>開始日</th>
+      <th>終了日</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @insurances.each do |insurance| %>
+      <tr>
+        <td><%= insurance.building&.name %></td>
+        <td><%= insurance.room&.room_number %></td>
+        <td><%= insurance.insurance_type_label %></td>
+        <td><%= link_to insurance.status_label, insurance %></td>
+        <td><%= insurance.policy_number %></td>
+        <td><%= insurance.provider %></td>
+        <td><%= number_to_currency(insurance.coverage_amount, unit: "¥", precision: 0) if insurance.coverage_amount %></td>
+        <td><%= number_to_currency(insurance.premium, unit: "¥", precision: 0) if insurance.premium %></td>
+        <td><%= insurance.start_date %></td>
+        <td><%= insurance.end_date %></td>
+        <td class="actions">
+          <%= link_to "編集", edit_insurance_path(insurance) %>
+          <%= button_to "削除", insurance, method: :delete, class: "btn-link btn-danger", data: { turbo_confirm: "#{insurance.policy_number} を削除しますか？" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

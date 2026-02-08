@@ -1,0 +1,73 @@
+<% content_for :title, "問い合わせ一覧" %>
+
+<div class="page-header">
+  <h1>問い合わせ一覧</h1>
+  <div class="page-header-actions">
+    <%= link_to "CSV ダウンロード", inquiries_path(format: :csv, q: @search_params.to_h), class: "btn" %>
+    <%= link_to "新規問い合わせ登録", new_inquiry_path, class: "btn btn-primary" %>
+  </div>
+</div>
+
+<%= form_with(url: inquiries_path, method: :get, class: "search-form", data: { turbo_action: "replace" }) do |form| %>
+  <div class="search-fields">
+    <div class="search-field">
+      <label>建物名</label>
+      <%= form.text_field "q[building_name]", value: @search_params[:building_name] %>
+    </div>
+    <div class="search-field">
+      <label>入居者名</label>
+      <%= form.text_field "q[tenant_name]", value: @search_params[:tenant_name] %>
+    </div>
+    <div class="search-field">
+      <label>カテゴリ</label>
+      <%= form.select "q[category]", Inquiry.categories.keys.map { |k| [I18n.t("activerecord.enums.inquiry.category.#{k}"), k] }, { include_blank: "すべて" }, { value: @search_params[:category] } %>
+    </div>
+    <div class="search-field">
+      <label>優先度</label>
+      <%= form.select "q[priority]", Inquiry.priorities.keys.map { |k| [I18n.t("activerecord.enums.inquiry.priority.#{k}"), k] }, { include_blank: "すべて" }, { value: @search_params[:priority] } %>
+    </div>
+    <div class="search-field">
+      <label>状態</label>
+      <%= form.select "q[status]", Inquiry.statuses.keys.map { |k| [I18n.t("activerecord.enums.inquiry.status.#{k}"), k] }, { include_blank: "すべて" }, { value: @search_params[:status] } %>
+    </div>
+    <div class="search-actions">
+      <%= form.submit "検索", class: "btn btn-primary" %>
+      <%= link_to "クリア", inquiries_path, class: "btn" %>
+    </div>
+  </div>
+<% end %>
+
+<p class="search-result-count"><%= @inquiries.size %>件</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>建物名</th>
+      <th>部屋番号</th>
+      <th>入居者名</th>
+      <th>カテゴリ</th>
+      <th>優先度</th>
+      <th>状態</th>
+      <th>件名</th>
+      <th>受付日</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @inquiries.each do |inquiry| %>
+      <tr>
+        <td><%= inquiry.room&.building&.name %></td>
+        <td><%= inquiry.room&.room_number %></td>
+        <td><%= link_to inquiry.tenant.name, inquiry.tenant if inquiry.tenant %></td>
+        <td><%= inquiry.category_label %></td>
+        <td><%= inquiry.priority_label %></td>
+        <td><%= link_to inquiry.status_label, inquiry %></td>
+        <td><%= link_to inquiry.title, inquiry %></td>
+        <td><%= inquiry.received_on %></td>
+        <td class="actions">
+          <%= link_to "編集", edit_inquiry_path(inquiry) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

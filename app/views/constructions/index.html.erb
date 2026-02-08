@@ -1,0 +1,74 @@
+<% content_for :title, "工事一覧" %>
+
+<div class="page-header">
+  <h1>工事一覧</h1>
+  <div class="page-header-actions">
+    <%= link_to "CSV ダウンロード", constructions_path(format: :csv, q: @search_params.to_h), class: "btn" %>
+    <%= link_to "新規工事登録", new_construction_path, class: "btn btn-primary" %>
+  </div>
+</div>
+
+<%= form_with(url: constructions_path, method: :get, class: "search-form", data: { turbo_action: "replace" }) do |form| %>
+  <div class="search-fields">
+    <div class="search-field">
+      <label>建物名</label>
+      <%= form.text_field "q[building_name]", value: @search_params[:building_name] %>
+    </div>
+    <div class="search-field">
+      <label>業者名</label>
+      <%= form.text_field "q[vendor_name]", value: @search_params[:vendor_name] %>
+    </div>
+    <div class="search-field">
+      <label>工事種別</label>
+      <%= form.select "q[construction_type]", Construction.construction_types.keys.map { |k| [I18n.t("activerecord.enums.construction.construction_type.#{k}"), k] }, { include_blank: "すべて" }, { value: @search_params[:construction_type] } %>
+    </div>
+    <div class="search-field">
+      <label>状態</label>
+      <%= form.select "q[status]", Construction.statuses.keys.map { |k| [I18n.t("activerecord.enums.construction.status.#{k}"), k] }, { include_blank: "すべて" }, { value: @search_params[:status] } %>
+    </div>
+    <div class="search-field">
+      <label>費用負担</label>
+      <%= form.select "q[cost_bearer]", Construction.cost_bearers.keys.map { |k| [I18n.t("activerecord.enums.construction.cost_bearer.#{k}"), k] }, { include_blank: "すべて" }, { value: @search_params[:cost_bearer] } %>
+    </div>
+    <div class="search-actions">
+      <%= form.submit "検索", class: "btn btn-primary" %>
+      <%= link_to "クリア", constructions_path, class: "btn" %>
+    </div>
+  </div>
+<% end %>
+
+<p class="search-result-count"><%= @constructions.size %>件</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>建物名</th>
+      <th>部屋番号</th>
+      <th>業者名</th>
+      <th>工事種別</th>
+      <th>状態</th>
+      <th>工事件名</th>
+      <th>見積金額</th>
+      <th>実績金額</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @constructions.each do |construction| %>
+      <tr>
+        <td><%= construction.room.building.name %></td>
+        <td><%= construction.room.room_number %></td>
+        <td><%= construction.vendor&.name %></td>
+        <td><%= construction.construction_type_label %></td>
+        <td><%= link_to construction.status_label, construction %></td>
+        <td><%= link_to construction.title, construction %></td>
+        <td><%= number_to_currency(construction.estimated_cost, unit: "¥", precision: 0) if construction.estimated_cost %></td>
+        <td><%= number_to_currency(construction.actual_cost, unit: "¥", precision: 0) if construction.actual_cost %></td>
+        <td class="actions">
+          <%= link_to "編集", edit_construction_path(construction) %>
+          <%= button_to "削除", construction, method: :delete, class: "btn-link btn-danger", data: { turbo_confirm: "#{construction.title} を削除しますか？" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

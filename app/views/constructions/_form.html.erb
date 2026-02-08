@@ -1,0 +1,86 @@
+<%= form_with(model: construction) do |form| %>
+  <% if construction.errors.any? %>
+    <div class="error-messages">
+      <h2><%= construction.errors.count %>件のエラーがあります</h2>
+      <ul>
+        <% construction.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :room_id %>
+    <%= form.select :room_id, Room.includes(:building).map { |r| ["#{r.building.name} #{r.room_number}", r.id] }, prompt: "選択してください" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :vendor_id %>
+    <%= form.collection_select :vendor_id, Vendor.order(:name), :id, :name, prompt: "選択してください" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :construction_type %>
+    <%= form.select :construction_type, Construction.construction_types.keys.map { |k| [I18n.t("activerecord.enums.construction.construction_type.#{k}"), k] }, prompt: "選択してください" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :status %>
+    <%= form.select :status, Construction.statuses.keys.map { |k| [I18n.t("activerecord.enums.construction.status.#{k}"), k] }, prompt: "選択してください" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :title %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.textarea :description, rows: 4 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :estimated_cost %>
+    <%= form.number_field :estimated_cost %>
+  </div>
+
+  <div class="field">
+    <%= form.label :actual_cost %>
+    <%= form.number_field :actual_cost %>
+  </div>
+
+  <div class="field">
+    <%= form.label :scheduled_start_date %>
+    <%= form.date_field :scheduled_start_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :scheduled_end_date %>
+    <%= form.date_field :scheduled_end_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :actual_start_date %>
+    <%= form.date_field :actual_start_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :actual_end_date %>
+    <%= form.date_field :actual_end_date %>
+  </div>
+
+  <div class="field">
+    <%= form.label :cost_bearer %>
+    <%= form.select :cost_bearer, Construction.cost_bearers.keys.map { |k| [I18n.t("activerecord.enums.construction.cost_bearer.#{k}"), k] }, prompt: "選択してください" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :notes %>
+    <%= form.textarea :notes, rows: 4 %>
+  </div>
+
+  <div class="form-actions">
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+<% end %>

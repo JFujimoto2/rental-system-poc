@@ -1,0 +1,56 @@
+<% content_for :title, "業者一覧" %>
+
+<div class="page-header">
+  <h1>業者一覧</h1>
+  <div class="page-header-actions">
+    <%= link_to "CSV ダウンロード", vendors_path(format: :csv, q: @search_params.to_h), class: "btn" %>
+    <%= link_to "新規業者登録", new_vendor_path, class: "btn btn-primary" %>
+  </div>
+</div>
+
+<%= form_with(url: vendors_path, method: :get, class: "search-form", data: { turbo_action: "replace" }) do |form| %>
+  <div class="search-fields">
+    <div class="search-field">
+      <label>業者名</label>
+      <%= form.text_field "q[name]", value: @search_params[:name] %>
+    </div>
+    <div class="search-field">
+      <label>電話番号</label>
+      <%= form.text_field "q[phone]", value: @search_params[:phone] %>
+    </div>
+    <div class="search-actions">
+      <%= form.submit "検索", class: "btn btn-primary" %>
+      <%= link_to "クリア", vendors_path, class: "btn" %>
+    </div>
+  </div>
+<% end %>
+
+<p class="search-result-count"><%= @vendors.size %>件</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>業者名</th>
+      <th>電話番号</th>
+      <th>メールアドレス</th>
+      <th>住所</th>
+      <th>担当者名</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @vendors.each do |vendor| %>
+      <tr>
+        <td><%= link_to vendor.name, vendor %></td>
+        <td><%= vendor.phone %></td>
+        <td><%= vendor.email %></td>
+        <td><%= vendor.address %></td>
+        <td><%= vendor.contact_person %></td>
+        <td class="actions">
+          <%= link_to "編集", edit_vendor_path(vendor) %>
+          <%= button_to "削除", vendor, method: :delete, class: "btn-link btn-danger", data: { turbo_confirm: "#{vendor.name} を削除しますか？" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

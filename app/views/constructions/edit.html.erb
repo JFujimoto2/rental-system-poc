@@ -1,0 +1,10 @@
+<% content_for :title, "工事編集" %>
+
+<h1>工事編集</h1>
+
+<%= render "form", construction: @construction %>
+
+<div>
+  <%= link_to "詳細に戻る", @construction %> |
+  <%= link_to "一覧に戻る", constructions_path %>
+</div>

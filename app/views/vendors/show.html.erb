@@ -1,0 +1,18 @@
+<% content_for :title, @vendor.name %>
+
+<h1><%= @vendor.name %></h1>
+
+<table class="detail-table">
+  <tr><th>業者名</th><td><%= @vendor.name %></td></tr>
+  <tr><th>電話番号</th><td><%= @vendor.phone %></td></tr>
+  <tr><th>メールアドレス</th><td><%= @vendor.email %></td></tr>
+  <tr><th>住所</th><td><%= @vendor.address %></td></tr>
+  <tr><th>担当者名</th><td><%= @vendor.contact_person %></td></tr>
+  <tr><th>備考</th><td><%= @vendor.notes %></td></tr>
+</table>
+
+<div class="actions-bar">
+  <%= link_to "編集", edit_vendor_path(@vendor), class: "btn" %>
+  <%= link_to "一覧に戻る", vendors_path, class: "btn" %>
+  <%= button_to "削除", @vendor, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "#{@vendor.name} を削除しますか？" } %>
+</div>

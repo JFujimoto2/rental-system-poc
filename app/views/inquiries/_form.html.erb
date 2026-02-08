@@ -1,0 +1,89 @@
+<%= form_with(model: inquiry) do |form| %>
+  <% if inquiry.errors.any? %>
+    <div class="error-messages">
+      <h2><%= inquiry.errors.count %>件のエラーがあります</h2>
+      <ul>
+        <% inquiry.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :room_id %>
+    <%= form.collection_select :room_id,
+      Room.includes(:building).order("buildings.name, rooms.room_number").map { |r| ["#{r.building.name} #{r.room_number}", r.id] },
+      :last, :first, { include_blank: "" } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :tenant_id %>
+    <%= form.collection_select :tenant_id, Tenant.order(:name), :id, :name, { include_blank: "" } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :assigned_user_id %>
+    <%= form.collection_select :assigned_user_id, User.order(:name), :id, :name, { include_blank: "" } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :construction_id %>
+    <%= form.collection_select :construction_id, Construction.order(:title), :id, :title, { include_blank: "" } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :category %>
+    <%= form.select :category,
+      Inquiry.categories.keys.map { |k| [I18n.t("activerecord.enums.inquiry.category.#{k}"), k] },
+      { prompt: "選択してください" } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :priority %>
+    <%= form.select :priority,
+      Inquiry.priorities.keys.map { |k| [I18n.t("activerecord.enums.inquiry.priority.#{k}"), k] },
+      { prompt: "選択してください" } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :status %>
+    <%= form.select :status,
+      Inquiry.statuses.keys.map { |k| [I18n.t("activerecord.enums.inquiry.status.#{k}"), k] },
+      { prompt: "選択してください" } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :title %>
+    <%= form.text_field :title %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :description %>
+    <%= form.text_area :description, rows: 4 %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :response %>
+    <%= form.text_area :response, rows: 4 %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :received_on %>
+    <%= form.date_field :received_on %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :resolved_on %>
+    <%= form.date_field :resolved_on %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :notes %>
+    <%= form.text_area :notes, rows: 4 %>
+  </div>
+
+  <div class="form-actions">
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+<% end %>
