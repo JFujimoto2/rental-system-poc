@@ -10,6 +10,21 @@ RSpec.describe 'MasterLeases' do
       get master_leases_path
       expect(response).to have_http_status(:success)
     end
+
+    it 'オーナーで検索できる' do
+      get master_leases_path, params: { q: { owner_id: owner.id } }
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe 'GET /master_leases.csv' do
+    it 'CSVをダウンロードできる' do
+      get master_leases_path(format: :csv)
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to include("text/csv")
+      expect(response.body.bytes[0..2]).to eq [ 0xEF, 0xBB, 0xBF ]
+      expect(response.body).to include("契約形態")
+    end
   end
 
   describe 'GET /master_leases/:id' do

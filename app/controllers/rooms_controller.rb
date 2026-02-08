@@ -1,9 +1,13 @@
 class RoomsController < ApplicationController
   before_action :set_room, only: %i[ show edit update destroy ]
 
-  # GET /rooms or /rooms.json
   def index
-    @rooms = Room.includes(:building).all
+    @search_params = search_params
+    @rooms = Room.includes(:building).search(@search_params)
+    respond_to do |format|
+      format.html
+      format.csv { send_csv(@rooms) }
+    end
   end
 
   # GET /rooms/1 or /rooms/1.json
@@ -63,7 +67,20 @@ class RoomsController < ApplicationController
       @room = Room.find(params.expect(:id))
     end
 
-    # Only allow a list of trusted parameters through.
+    def search_params
+      params.fetch(:q, {}).permit(:building_id, :room_number, :status, :room_type)
+    end
+
+    def send_csv(rooms)
+      csv_data = "\xEF\xBB\xBF" + CSV.generate do |csv|
+        csv << %w[建物 部屋番号 階数 間取り 面積 賃料 状態]
+        rooms.each do |r|
+          csv << [ r.building.name, r.room_number, r.floor, r.room_type, r.area, r.rent, r.status_label ]
+        end
+      end
+      send_data csv_data, filename: "rooms_#{Date.current.strftime('%Y%m%d')}.csv", type: :csv
+    end
+
     def room_params
       params.expect(room: [ :building_id, :room_number, :floor, :area, :rent, :status, :room_type, :notes ])
     end

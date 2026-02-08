@@ -2,7 +2,12 @@ class ContractsController < ApplicationController
   before_action :set_contract, only: %i[ show edit update destroy ]
 
   def index
-    @contracts = Contract.includes(:room, :tenant, room: :building).order(start_date: :desc)
+    @search_params = search_params
+    @contracts = Contract.includes(:room, :tenant, room: :building).search(@search_params).order(start_date: :desc)
+    respond_to do |format|
+      format.html
+      format.csv { send_csv(@contracts) }
+    end
   end
 
   def show
@@ -42,6 +47,20 @@ class ContractsController < ApplicationController
 
   def set_contract
     @contract = Contract.find(params.expect(:id))
+  end
+
+  def search_params
+    params.fetch(:q, {}).permit(:building_name, :tenant_name, :status, :lease_type)
+  end
+
+  def send_csv(contracts)
+    csv_data = "\xEF\xBB\xBF" + CSV.generate do |csv|
+      csv << %w[建物 部屋 入居者 借家種別 契約開始日 契約終了日 月額賃料 状態]
+      contracts.each do |c|
+        csv << [ c.room.building.name, c.room.room_number, c.tenant.name, c.lease_type_label, c.start_date, c.end_date, c.rent, c.status_label ]
+      end
+    end
+    send_data csv_data, filename: "contracts_#{Date.current.strftime('%Y%m%d')}.csv", type: :csv
   end
 
   def contract_params

@@ -2,8 +2,42 @@
 
 <div class="page-header">
   <h1>オーナー支払一覧</h1>
-  <%= link_to "新規オーナー支払登録", new_owner_payment_path, class: "btn btn-primary" %>
+  <div class="page-header-actions">
+    <%= link_to "CSV ダウンロード", owner_payments_path(format: :csv, q: @search_params.to_h), class: "btn" %>
+    <%= link_to "新規オーナー支払登録", new_owner_payment_path, class: "btn btn-primary" %>
+  </div>
 </div>
+
+<%= form_with(url: owner_payments_path, method: :get, class: "search-form", data: { turbo_action: "replace" }) do |form| %>
+  <div class="search-fields">
+    <div class="search-field">
+      <label>オーナー名</label>
+      <%= form.text_field "q[owner_name]", value: @search_params[:owner_name] %>
+    </div>
+    <div class="search-field">
+      <label>建物名</label>
+      <%= form.text_field "q[building_name]", value: @search_params[:building_name] %>
+    </div>
+    <div class="search-field">
+      <label>状態</label>
+      <%= form.select "q[status]", OwnerPayment.statuses.keys.map { |s| [I18n.t("activerecord.enums.owner_payment.status.#{s}"), s] }, { include_blank: "すべて" }, { value: @search_params[:status] } %>
+    </div>
+    <div class="search-field">
+      <label>対象月（開始）</label>
+      <%= form.date_field "q[target_month_from]", value: @search_params[:target_month_from] %>
+    </div>
+    <div class="search-field">
+      <label>対象月（終了）</label>
+      <%= form.date_field "q[target_month_to]", value: @search_params[:target_month_to] %>
+    </div>
+    <div class="search-actions">
+      <%= form.submit "検索", class: "btn btn-primary" %>
+      <%= link_to "クリア", owner_payments_path, class: "btn" %>
+    </div>
+  </div>
+<% end %>
+
+<p class="search-result-count"><%= @owner_payments.size %>件</p>
 
 <table>
   <thead>

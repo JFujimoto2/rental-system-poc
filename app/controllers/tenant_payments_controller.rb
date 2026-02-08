@@ -2,7 +2,12 @@ class TenantPaymentsController < ApplicationController
   before_action :set_tenant_payment, only: %i[ show edit update destroy ]
 
   def index
-    @tenant_payments = TenantPayment.includes(contract: [ :tenant, { room: :building } ]).order(:due_date)
+    @search_params = search_params
+    @tenant_payments = TenantPayment.includes(contract: [ :tenant, { room: :building } ]).search(@search_params).order(:due_date)
+    respond_to do |format|
+      format.html
+      format.csv { send_csv(@tenant_payments) }
+    end
   end
 
   def show
@@ -42,6 +47,20 @@ class TenantPaymentsController < ApplicationController
 
   def set_tenant_payment
     @tenant_payment = TenantPayment.find(params.expect(:id))
+  end
+
+  def search_params
+    params.fetch(:q, {}).permit(:tenant_name, :status, :payment_method, :due_date_from, :due_date_to)
+  end
+
+  def send_csv(tenant_payments)
+    csv_data = "\xEF\xBB\xBF" + CSV.generate do |csv|
+      csv << %w[入居者 部屋 入金期日 請求金額 入金額 状態 入金方法]
+      tenant_payments.each do |tp|
+        csv << [ tp.contract.tenant.name, "#{tp.contract.room.building.name} #{tp.contract.room.room_number}", tp.due_date, tp.amount, tp.paid_amount, tp.status_label, tp.payment_method_label ]
+      end
+    end
+    send_data csv_data, filename: "tenant_payments_#{Date.current.strftime('%Y%m%d')}.csv", type: :csv
   end
 
   def tenant_payment_params

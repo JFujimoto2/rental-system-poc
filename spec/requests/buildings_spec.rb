@@ -8,6 +8,44 @@ RSpec.describe 'Buildings' do
       get buildings_path
       expect(response).to have_http_status(:success)
     end
+
+    it '名前で検索できる' do
+      create(:building, name: "テスト建物")
+      get buildings_path, params: { q: { name: "テスト" } }
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("テスト建物")
+    end
+
+    it '検索結果件数が表示される' do
+      get buildings_path, params: { q: { name: "サンプル" } }
+      expect(response.body).to include("件")
+    end
+  end
+
+  describe 'GET /buildings.csv' do
+    it 'CSVをダウンロードできる' do
+      get buildings_path(format: :csv)
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to include("text/csv")
+    end
+
+    it 'CSVにBOMが付与される' do
+      get buildings_path(format: :csv)
+      expect(response.body.bytes[0..2]).to eq [ 0xEF, 0xBB, 0xBF ]
+    end
+
+    it 'CSVに日本語ヘッダーが含まれる' do
+      get buildings_path(format: :csv)
+      expect(response.body).to include("建物名")
+    end
+
+    it '検索条件でフィルタされたCSVをダウンロードできる' do
+      create(:building, name: "CSV対象ビル")
+      create(:building, name: "除外ビル")
+      get buildings_path(format: :csv, q: { name: "CSV対象" })
+      expect(response.body).to include("CSV対象ビル")
+      expect(response.body).not_to include("除外ビル")
+    end
   end
 
   describe 'GET /buildings/:id' do

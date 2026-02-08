@@ -1,9 +1,13 @@
 class BuildingsController < ApplicationController
   before_action :set_building, only: %i[ show edit update destroy ]
 
-  # GET /buildings or /buildings.json
   def index
-    @buildings = Building.includes(:owner).all
+    @search_params = search_params
+    @buildings = Building.includes(:owner).search(@search_params)
+    respond_to do |format|
+      format.html
+      format.csv { send_csv(@buildings) }
+    end
   end
 
   # GET /buildings/1 or /buildings/1.json
@@ -63,8 +67,21 @@ class BuildingsController < ApplicationController
       @building = Building.find(params.expect(:id))
     end
 
-    # Only allow a list of trusted parameters through.
     def building_params
       params.expect(building: [ :owner_id, :name, :address, :building_type, :floors, :built_year, :nearest_station, :notes ])
+    end
+
+    def search_params
+      params.fetch(:q, {}).permit(:name, :address, :owner_id, :building_type)
+    end
+
+    def send_csv(buildings)
+      csv_data = "\xEF\xBB\xBF" + CSV.generate do |csv|
+        csv << %w[建物名 オーナー 住所 構造 階数 築年 最寄駅]
+        buildings.each do |b|
+          csv << [ b.name, b.owner&.name, b.address, b.building_type, b.floors, b.built_year, b.nearest_station ]
+        end
+      end
+      send_data csv_data, filename: "buildings_#{Date.current.strftime('%Y%m%d')}.csv", type: :csv
     end
 end

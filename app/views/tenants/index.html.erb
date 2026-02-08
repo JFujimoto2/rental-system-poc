@@ -2,8 +2,34 @@
 
 <div class="page-header">
   <h1>入居者一覧</h1>
-  <%= link_to "新規入居者登録", new_tenant_path, class: "btn btn-primary" %>
+  <div class="page-header-actions">
+    <%= link_to "CSV ダウンロード", tenants_path(format: :csv, q: @search_params.to_h), class: "btn" %>
+    <%= link_to "新規入居者登録", new_tenant_path, class: "btn btn-primary" %>
+  </div>
 </div>
+
+<%= form_with(url: tenants_path, method: :get, class: "search-form", data: { turbo_action: "replace" }) do |form| %>
+  <div class="search-fields">
+    <div class="search-field">
+      <label>入居者名</label>
+      <%= form.text_field "q[name]", value: @search_params[:name] %>
+    </div>
+    <div class="search-field">
+      <label>カナ</label>
+      <%= form.text_field "q[name_kana]", value: @search_params[:name_kana] %>
+    </div>
+    <div class="search-field">
+      <label>電話番号</label>
+      <%= form.text_field "q[phone]", value: @search_params[:phone] %>
+    </div>
+    <div class="search-actions">
+      <%= form.submit "検索", class: "btn btn-primary" %>
+      <%= link_to "クリア", tenants_path, class: "btn" %>
+    </div>
+  </div>
+<% end %>
+
+<p class="search-result-count"><%= @tenants.size %>件</p>
 
 <table>
   <thead>

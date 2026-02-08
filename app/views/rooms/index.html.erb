@@ -2,8 +2,38 @@
 
 <div class="page-header">
   <h1>部屋一覧</h1>
-  <%= link_to "新規部屋登録", new_room_path, class: "btn btn-primary" %>
+  <div class="page-header-actions">
+    <%= link_to "CSV ダウンロード", rooms_path(format: :csv, q: @search_params.to_h), class: "btn" %>
+    <%= link_to "新規部屋登録", new_room_path, class: "btn btn-primary" %>
+  </div>
 </div>
+
+<%= form_with(url: rooms_path, method: :get, class: "search-form", data: { turbo_action: "replace" }) do |form| %>
+  <div class="search-fields">
+    <div class="search-field">
+      <label>建物</label>
+      <%= form.select "q[building_id]", Building.order(:name).pluck(:name, :id), { include_blank: "すべて" }, { value: @search_params[:building_id] } %>
+    </div>
+    <div class="search-field">
+      <label>部屋番号</label>
+      <%= form.text_field "q[room_number]", value: @search_params[:room_number] %>
+    </div>
+    <div class="search-field">
+      <label>状態</label>
+      <%= form.select "q[status]", Room.statuses.keys.map { |s| [I18n.t("activerecord.enums.room.status.#{s}"), s] }, { include_blank: "すべて" }, { value: @search_params[:status] } %>
+    </div>
+    <div class="search-field">
+      <label>間取り</label>
+      <%= form.text_field "q[room_type]", value: @search_params[:room_type] %>
+    </div>
+    <div class="search-actions">
+      <%= form.submit "検索", class: "btn btn-primary" %>
+      <%= link_to "クリア", rooms_path, class: "btn" %>
+    </div>
+  </div>
+<% end %>
+
+<p class="search-result-count"><%= @rooms.size %>件</p>
 
 <table>
   <thead>

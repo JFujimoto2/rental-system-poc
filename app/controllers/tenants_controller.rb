@@ -2,7 +2,12 @@ class TenantsController < ApplicationController
   before_action :set_tenant, only: %i[ show edit update destroy ]
 
   def index
-    @tenants = Tenant.order(:name)
+    @search_params = search_params
+    @tenants = Tenant.search(@search_params).order(:name)
+    respond_to do |format|
+      format.html
+      format.csv { send_csv(@tenants) }
+    end
   end
 
   def show
@@ -42,6 +47,20 @@ class TenantsController < ApplicationController
 
   def set_tenant
     @tenant = Tenant.find(params.expect(:id))
+  end
+
+  def search_params
+    params.fetch(:q, {}).permit(:name, :name_kana, :phone)
+  end
+
+  def send_csv(tenants)
+    csv_data = "\xEF\xBB\xBF" + CSV.generate do |csv|
+      csv << %w[入居者名 入居者名カナ 電話番号 メールアドレス]
+      tenants.each do |t|
+        csv << [ t.name, t.name_kana, t.phone, t.email ]
+      end
+    end
+    send_data csv_data, filename: "tenants_#{Date.current.strftime('%Y%m%d')}.csv", type: :csv
   end
 
   def tenant_params

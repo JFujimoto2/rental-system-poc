@@ -25,6 +25,46 @@ RSpec.describe Contract do
     }
   end
 
+  describe '.search' do
+    let!(:building1) { create(:building, name: "Aマンション") }
+    let!(:building2) { create(:building, name: "Bビル") }
+    let!(:room1) { create(:room, building: building1) }
+    let!(:room2) { create(:room, building: building2, room_number: "201") }
+    let!(:tenant1) { create(:tenant, name: "佐藤太郎") }
+    let!(:tenant2) { create(:tenant, name: "高橋花子") }
+    let!(:contract1) { create(:contract, room: room1, tenant: tenant1, lease_type: :ordinary, status: :active) }
+    let!(:contract2) { create(:contract, room: room2, tenant: tenant2, lease_type: :fixed_term, status: :terminated) }
+
+    it '建物名で部分一致検索できる' do
+      result = Contract.search({ building_name: "Aマンション" })
+      expect(result).to include(contract1)
+      expect(result).not_to include(contract2)
+    end
+
+    it '入居者名で部分一致検索できる' do
+      result = Contract.search({ tenant_name: "高橋" })
+      expect(result).to include(contract2)
+      expect(result).not_to include(contract1)
+    end
+
+    it '状態で検索できる' do
+      result = Contract.search({ status: "active" })
+      expect(result).to include(contract1)
+      expect(result).not_to include(contract2)
+    end
+
+    it '借家種別で検索できる' do
+      result = Contract.search({ lease_type: "fixed_term" })
+      expect(result).to include(contract2)
+      expect(result).not_to include(contract1)
+    end
+
+    it 'パラメータが空の場合は全件を返す' do
+      result = Contract.search({})
+      expect(result).to include(contract1, contract2)
+    end
+  end
+
   describe '#lease_type_label' do
     it '普通借家の日本語ラベルを返す' do
       contract = build(:contract, lease_type: :ordinary)

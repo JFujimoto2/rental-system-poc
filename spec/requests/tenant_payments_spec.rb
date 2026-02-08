@@ -12,6 +12,21 @@ RSpec.describe 'TenantPayments' do
       get tenant_payments_path
       expect(response).to have_http_status(:success)
     end
+
+    it '入居者名で検索できる' do
+      get tenant_payments_path, params: { q: { tenant_name: "山田" } }
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe 'GET /tenant_payments.csv' do
+    it 'CSVをダウンロードできる' do
+      get tenant_payments_path(format: :csv)
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to include("text/csv")
+      expect(response.body.bytes[0..2]).to eq [ 0xEF, 0xBB, 0xBF ]
+      expect(response.body).to include("入金期日")
+    end
   end
 
   describe 'GET /tenant_payments/:id' do

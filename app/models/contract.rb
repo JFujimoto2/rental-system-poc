@@ -7,6 +7,15 @@ class Contract < ApplicationRecord
   enum :lease_type, { ordinary: 0, fixed_term: 1 }
   enum :status, { applying: 0, active: 1, scheduled_termination: 2, terminated: 3 }
 
+  def self.search(params)
+    scope = all
+    scope = scope.joins(room: :building).where("buildings.name ILIKE ?", "%#{params[:building_name]}%") if params[:building_name].present?
+    scope = scope.joins(:tenant).where("tenants.name ILIKE ?", "%#{params[:tenant_name]}%") if params[:tenant_name].present?
+    scope = scope.where(status: params[:status]) if params[:status].present?
+    scope = scope.where(lease_type: params[:lease_type]) if params[:lease_type].present?
+    scope
+  end
+
   validates :lease_type, presence: true
   validates :start_date, presence: true
   validates :status, presence: true

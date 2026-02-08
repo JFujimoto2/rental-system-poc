@@ -2,8 +2,38 @@
 
 <div class="page-header">
   <h1>建物一覧</h1>
-  <%= link_to "新規建物登録", new_building_path, class: "btn btn-primary" %>
+  <div class="page-header-actions">
+    <%= link_to "CSV ダウンロード", buildings_path(format: :csv, q: @search_params.to_h), class: "btn" %>
+    <%= link_to "新規建物登録", new_building_path, class: "btn btn-primary" %>
+  </div>
 </div>
+
+<%= form_with(url: buildings_path, method: :get, class: "search-form", data: { turbo_action: "replace" }) do |form| %>
+  <div class="search-fields">
+    <div class="search-field">
+      <label>建物名</label>
+      <%= form.text_field "q[name]", value: @search_params[:name] %>
+    </div>
+    <div class="search-field">
+      <label>住所</label>
+      <%= form.text_field "q[address]", value: @search_params[:address] %>
+    </div>
+    <div class="search-field">
+      <label>オーナー</label>
+      <%= form.select "q[owner_id]", Owner.order(:name).pluck(:name, :id), { include_blank: "すべて" }, { value: @search_params[:owner_id] } %>
+    </div>
+    <div class="search-field">
+      <label>構造</label>
+      <%= form.text_field "q[building_type]", value: @search_params[:building_type] %>
+    </div>
+    <div class="search-actions">
+      <%= form.submit "検索", class: "btn btn-primary" %>
+      <%= link_to "クリア", buildings_path, class: "btn" %>
+    </div>
+  </div>
+<% end %>
+
+<p class="search-result-count"><%= @buildings.size %>件</p>
 
 <table>
   <thead>

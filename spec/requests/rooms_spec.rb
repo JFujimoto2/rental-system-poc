@@ -9,6 +9,21 @@ RSpec.describe 'Rooms' do
       get rooms_path
       expect(response).to have_http_status(:success)
     end
+
+    it '部屋番号で検索できる' do
+      get rooms_path, params: { q: { room_number: "101" } }
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe 'GET /rooms.csv' do
+    it 'CSVをダウンロードできる' do
+      get rooms_path(format: :csv)
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to include("text/csv")
+      expect(response.body.bytes[0..2]).to eq [ 0xEF, 0xBB, 0xBF ]
+      expect(response.body).to include("部屋番号")
+    end
   end
 
   describe 'GET /rooms/:id' do

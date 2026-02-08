@@ -8,6 +8,21 @@ RSpec.describe 'Tenants' do
       get tenants_path
       expect(response).to have_http_status(:success)
     end
+
+    it '名前で検索できる' do
+      get tenants_path, params: { q: { name: "山田" } }
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe 'GET /tenants.csv' do
+    it 'CSVをダウンロードできる' do
+      get tenants_path(format: :csv)
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to include("text/csv")
+      expect(response.body.bytes[0..2]).to eq [ 0xEF, 0xBB, 0xBF ]
+      expect(response.body).to include("入居者名")
+    end
   end
 
   describe 'GET /tenants/:id' do

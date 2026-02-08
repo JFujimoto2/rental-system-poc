@@ -2,7 +2,12 @@ class MasterLeasesController < ApplicationController
   before_action :set_master_lease, only: %i[ show edit update destroy ]
 
   def index
-    @master_leases = MasterLease.includes(:owner, :building).order(start_date: :desc)
+    @search_params = search_params
+    @master_leases = MasterLease.includes(:owner, :building).search(@search_params).order(start_date: :desc)
+    respond_to do |format|
+      format.html
+      format.csv { send_csv(@master_leases) }
+    end
   end
 
   def show
@@ -42,6 +47,20 @@ class MasterLeasesController < ApplicationController
 
   def set_master_lease
     @master_lease = MasterLease.find(params.expect(:id))
+  end
+
+  def search_params
+    params.fetch(:q, {}).permit(:owner_id, :building_id, :status, :contract_type)
+  end
+
+  def send_csv(master_leases)
+    csv_data = "\xEF\xBB\xBF" + CSV.generate do |csv|
+      csv << %w[オーナー 建物 契約形態 契約開始日 契約終了日 保証賃料 状態]
+      master_leases.each do |ml|
+        csv << [ ml.owner.name, ml.building.name, ml.contract_type_label, ml.start_date, ml.end_date, ml.guaranteed_rent, ml.status_label ]
+      end
+    end
+    send_data csv_data, filename: "master_leases_#{Date.current.strftime('%Y%m%d')}.csv", type: :csv
   end
 
   def master_lease_params

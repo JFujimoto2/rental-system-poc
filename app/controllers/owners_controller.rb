@@ -1,9 +1,13 @@
 class OwnersController < ApplicationController
   before_action :set_owner, only: %i[ show edit update destroy ]
 
-  # GET /owners or /owners.json
   def index
-    @owners = Owner.all
+    @search_params = search_params
+    @owners = Owner.search(@search_params)
+    respond_to do |format|
+      format.html
+      format.csv { send_csv(@owners) }
+    end
   end
 
   # GET /owners/1 or /owners/1.json
@@ -63,7 +67,20 @@ class OwnersController < ApplicationController
       @owner = Owner.find(params.expect(:id))
     end
 
-    # Only allow a list of trusted parameters through.
+    def search_params
+      params.fetch(:q, {}).permit(:name, :phone, :email)
+    end
+
+    def send_csv(owners)
+      csv_data = "\xEF\xBB\xBF" + CSV.generate do |csv|
+        csv << %w[オーナー名 電話番号 メールアドレス 住所]
+        owners.each do |o|
+          csv << [ o.name, o.phone, o.email, o.address ]
+        end
+      end
+      send_data csv_data, filename: "owners_#{Date.current.strftime('%Y%m%d')}.csv", type: :csv
+    end
+
     def owner_params
       params.expect(owner: [ :name, :name_kana, :phone, :email, :postal_code, :address, :bank_name, :bank_branch, :account_type, :account_number, :account_holder, :notes ])
     end

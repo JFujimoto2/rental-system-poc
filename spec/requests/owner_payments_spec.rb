@@ -11,6 +11,21 @@ RSpec.describe 'OwnerPayments' do
       get owner_payments_path
       expect(response).to have_http_status(:success)
     end
+
+    it 'オーナー名で検索できる' do
+      get owner_payments_path, params: { q: { owner_name: "山田" } }
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe 'GET /owner_payments.csv' do
+    it 'CSVをダウンロードできる' do
+      get owner_payments_path(format: :csv)
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to include("text/csv")
+      expect(response.body.bytes[0..2]).to eq [ 0xEF, 0xBB, 0xBF ]
+      expect(response.body).to include("対象月")
+    end
   end
 
   describe 'GET /owner_payments/:id' do

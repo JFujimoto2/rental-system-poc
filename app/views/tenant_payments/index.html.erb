@@ -2,8 +2,42 @@
 
 <div class="page-header">
   <h1>テナント入金一覧</h1>
-  <%= link_to "新規入金登録", new_tenant_payment_path, class: "btn btn-primary" %>
+  <div class="page-header-actions">
+    <%= link_to "CSV ダウンロード", tenant_payments_path(format: :csv, q: @search_params.to_h), class: "btn" %>
+    <%= link_to "新規入金登録", new_tenant_payment_path, class: "btn btn-primary" %>
+  </div>
 </div>
+
+<%= form_with(url: tenant_payments_path, method: :get, class: "search-form", data: { turbo_action: "replace" }) do |form| %>
+  <div class="search-fields">
+    <div class="search-field">
+      <label>入居者名</label>
+      <%= form.text_field "q[tenant_name]", value: @search_params[:tenant_name] %>
+    </div>
+    <div class="search-field">
+      <label>状態</label>
+      <%= form.select "q[status]", TenantPayment.statuses.keys.map { |s| [I18n.t("activerecord.enums.tenant_payment.status.#{s}"), s] }, { include_blank: "すべて" }, { value: @search_params[:status] } %>
+    </div>
+    <div class="search-field">
+      <label>入金方法</label>
+      <%= form.select "q[payment_method]", TenantPayment.payment_methods.keys.map { |s| [I18n.t("activerecord.enums.tenant_payment.payment_method.#{s}"), s] }, { include_blank: "すべて" }, { value: @search_params[:payment_method] } %>
+    </div>
+    <div class="search-field">
+      <label>期日（開始）</label>
+      <%= form.date_field "q[due_date_from]", value: @search_params[:due_date_from] %>
+    </div>
+    <div class="search-field">
+      <label>期日（終了）</label>
+      <%= form.date_field "q[due_date_to]", value: @search_params[:due_date_to] %>
+    </div>
+    <div class="search-actions">
+      <%= form.submit "検索", class: "btn btn-primary" %>
+      <%= link_to "クリア", tenant_payments_path, class: "btn" %>
+    </div>
+  </div>
+<% end %>
+
+<p class="search-result-count"><%= @tenant_payments.size %>件</p>
 
 <table>
   <thead>

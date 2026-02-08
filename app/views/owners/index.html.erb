@@ -2,8 +2,34 @@
 
 <div class="page-header">
   <h1>オーナー一覧</h1>
-  <%= link_to "新規オーナー登録", new_owner_path, class: "btn btn-primary" %>
+  <div class="page-header-actions">
+    <%= link_to "CSV ダウンロード", owners_path(format: :csv, q: @search_params.to_h), class: "btn" %>
+    <%= link_to "新規オーナー登録", new_owner_path, class: "btn btn-primary" %>
+  </div>
 </div>
+
+<%= form_with(url: owners_path, method: :get, class: "search-form", data: { turbo_action: "replace" }) do |form| %>
+  <div class="search-fields">
+    <div class="search-field">
+      <label>オーナー名</label>
+      <%= form.text_field "q[name]", value: @search_params[:name] %>
+    </div>
+    <div class="search-field">
+      <label>電話番号</label>
+      <%= form.text_field "q[phone]", value: @search_params[:phone] %>
+    </div>
+    <div class="search-field">
+      <label>メール</label>
+      <%= form.text_field "q[email]", value: @search_params[:email] %>
+    </div>
+    <div class="search-actions">
+      <%= form.submit "検索", class: "btn btn-primary" %>
+      <%= link_to "クリア", owners_path, class: "btn" %>
+    </div>
+  </div>
+<% end %>
+
+<p class="search-result-count"><%= @owners.size %>件</p>
 
 <table>
   <thead>

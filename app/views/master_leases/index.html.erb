@@ -2,8 +2,38 @@
 
 <div class="page-header">
   <h1>マスターリース契約一覧</h1>
-  <%= link_to "新規契約登録", new_master_lease_path, class: "btn btn-primary" %>
+  <div class="page-header-actions">
+    <%= link_to "CSV ダウンロード", master_leases_path(format: :csv, q: @search_params.to_h), class: "btn" %>
+    <%= link_to "新規契約登録", new_master_lease_path, class: "btn btn-primary" %>
+  </div>
 </div>
+
+<%= form_with(url: master_leases_path, method: :get, class: "search-form", data: { turbo_action: "replace" }) do |form| %>
+  <div class="search-fields">
+    <div class="search-field">
+      <label>オーナー</label>
+      <%= form.select "q[owner_id]", Owner.order(:name).pluck(:name, :id), { include_blank: "すべて" }, { value: @search_params[:owner_id] } %>
+    </div>
+    <div class="search-field">
+      <label>建物</label>
+      <%= form.select "q[building_id]", Building.order(:name).pluck(:name, :id), { include_blank: "すべて" }, { value: @search_params[:building_id] } %>
+    </div>
+    <div class="search-field">
+      <label>状態</label>
+      <%= form.select "q[status]", MasterLease.statuses.keys.map { |s| [I18n.t("activerecord.enums.master_lease.status.#{s}"), s] }, { include_blank: "すべて" }, { value: @search_params[:status] } %>
+    </div>
+    <div class="search-field">
+      <label>契約形態</label>
+      <%= form.select "q[contract_type]", MasterLease.contract_types.keys.map { |s| [I18n.t("activerecord.enums.master_lease.contract_type.#{s}"), s] }, { include_blank: "すべて" }, { value: @search_params[:contract_type] } %>
+    </div>
+    <div class="search-actions">
+      <%= form.submit "検索", class: "btn btn-primary" %>
+      <%= link_to "クリア", master_leases_path, class: "btn" %>
+    </div>
+  </div>
+<% end %>
+
+<p class="search-result-count"><%= @master_leases.size %>件</p>
 
 <table>
   <thead>

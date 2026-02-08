@@ -26,6 +26,44 @@ RSpec.describe MasterLease do
     }
   end
 
+  describe '.search' do
+    let!(:owner1) { create(:owner, name: "オーナーA") }
+    let!(:owner2) { create(:owner, name: "オーナーB") }
+    let!(:building1) { create(:building, name: "Aビル", owner: owner1) }
+    let!(:building2) { create(:building, name: "Bビル", owner: owner2) }
+    let!(:ml1) { create(:master_lease, owner: owner1, building: building1, contract_type: :sublease, status: :active) }
+    let!(:ml2) { create(:master_lease, owner: owner2, building: building2, contract_type: :management, status: :terminated) }
+
+    it 'オーナーIDで検索できる' do
+      result = MasterLease.search({ owner_id: owner1.id.to_s })
+      expect(result).to include(ml1)
+      expect(result).not_to include(ml2)
+    end
+
+    it '建物IDで検索できる' do
+      result = MasterLease.search({ building_id: building2.id.to_s })
+      expect(result).to include(ml2)
+      expect(result).not_to include(ml1)
+    end
+
+    it '状態で検索できる' do
+      result = MasterLease.search({ status: "active" })
+      expect(result).to include(ml1)
+      expect(result).not_to include(ml2)
+    end
+
+    it '契約形態で検索できる' do
+      result = MasterLease.search({ contract_type: "management" })
+      expect(result).to include(ml2)
+      expect(result).not_to include(ml1)
+    end
+
+    it 'パラメータが空の場合は全件を返す' do
+      result = MasterLease.search({})
+      expect(result).to include(ml1, ml2)
+    end
+  end
+
   describe '#contract_type_label' do
     it 'サブリースの日本語ラベルを返す' do
       master_lease = build(:master_lease, contract_type: :sublease)

@@ -12,6 +12,21 @@ RSpec.describe 'Contracts' do
       get contracts_path
       expect(response).to have_http_status(:success)
     end
+
+    it '建物名で検索できる' do
+      get contracts_path, params: { q: { building_name: "サンプル" } }
+      expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe 'GET /contracts.csv' do
+    it 'CSVをダウンロードできる' do
+      get contracts_path(format: :csv)
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to include("text/csv")
+      expect(response.body.bytes[0..2]).to eq [ 0xEF, 0xBB, 0xBF ]
+      expect(response.body).to include("借家種別")
+    end
   end
 
   describe 'GET /contracts/:id' do
