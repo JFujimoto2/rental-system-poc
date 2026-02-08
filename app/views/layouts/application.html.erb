@@ -24,6 +24,17 @@
   </head>
 
   <body>
-    <%= yield %>
+    <header class="site-header">
+      <nav class="site-nav">
+        <span class="site-title"><%= link_to "賃貸管理システム", root_path %></span>
+        <ul>
+          <li><%= link_to "建物一覧", buildings_path %></li>
+          <li><%= link_to "部屋一覧", rooms_path %></li>
+        </ul>
+      </nav>
+    </header>
+    <main class="container">
+      <%= yield %>
+    </main>
   </body>
 </html>

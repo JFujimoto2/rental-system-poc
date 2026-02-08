@@ -38,9 +38,9 @@ rental-system-poc/
 │   ├── 03_tech_reference/         # 技術参考資料
 │   ├── 04_db_analysis/            # DB調査・分析結果
 │   └── 05_screenshots/            # 画面キャプチャ
-├── app/                           # Railsアプリ（今後作成）
-├── docker-compose.yml             # （今後作成）
-└── Gemfile                        # （今後作成）
+├── app/                           # Railsアプリ
+├── docker-compose.yml             # PostgreSQL コンテナ定義
+└── Gemfile
 ```
 
 ## 外部連携
@@ -54,8 +54,53 @@ rental-system-poc/
 
 ## セットアップ
 
+### 前提条件
+
+- Ruby 3.3
+- Node.js（importmap 用）
+- PostgreSQL 16（ローカル起動の場合）
+- Docker / Docker Compose（Docker 起動の場合）
+
+### A. Docker で PostgreSQL を起動する場合（推奨）
+
 ```bash
-# 今後記載
+# 1. PostgreSQL コンテナを起動
+docker compose up -d
+
+# 2. 依存ライブラリのインストール・DB作成・マイグレーション・サーバー起動
+bin/setup
+```
+
+デフォルトで `localhost:5432` に `postgres/postgres` で接続します。
+
+### B. ローカルの PostgreSQL を使う場合
+
+```bash
+# 1. PostgreSQL が起動していることを確認
+pg_isready
+
+# 2. 必要に応じて接続情報を環境変数で指定
+export DB_HOST=localhost
+export DB_USERNAME=your_username
+export DB_PASSWORD=your_password
+export DB_PORT=5432
+
+# 3. セットアップ実行
+bin/setup
+```
+
+### サーバー起動
+
+```bash
+bin/rails server
+# => http://localhost:3000 でアクセス
+```
+
+### テスト・Lint
+
+```bash
+bundle exec rspec    # テスト実行
+bin/rubocop          # Lint チェック
 ```
 
 ## PoC スケジュール

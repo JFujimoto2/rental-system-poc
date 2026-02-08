@@ -1,0 +1,51 @@
+<%= form_with(model: building) do |form| %>
+  <% if building.errors.any? %>
+    <div class="error-messages">
+      <h2><%= building.errors.count %>件のエラーがあります</h2>
+      <ul>
+        <% building.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :address %>
+    <%= form.text_field :address %>
+  </div>
+
+  <div class="field">
+    <%= form.label :building_type %>
+    <%= form.text_field :building_type %>
+  </div>
+
+  <div class="field">
+    <%= form.label :floors %>
+    <%= form.number_field :floors %>
+  </div>
+
+  <div class="field">
+    <%= form.label :built_year %>
+    <%= form.number_field :built_year %>
+  </div>
+
+  <div class="field">
+    <%= form.label :nearest_station %>
+    <%= form.text_field :nearest_station %>
+  </div>
+
+  <div class="field">
+    <%= form.label :notes %>
+    <%= form.textarea :notes, rows: 4 %>
+  </div>
+
+  <div class="form-actions">
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+<% end %>
