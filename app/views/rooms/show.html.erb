@@ -1,0 +1,22 @@
+<% content_for :title, "#{@room.building.name} #{@room.room_number}" %>
+
+<p class="notice"><%= notice %></p>
+
+<h1><%= @room.building.name %> <%= @room.room_number %></h1>
+
+<table class="detail-table">
+  <tr><th>建物</th><td><%= link_to @room.building.name, @room.building %></td></tr>
+  <tr><th>部屋番号</th><td><%= @room.room_number %></td></tr>
+  <tr><th>階数</th><td><%= @room.floor %></td></tr>
+  <tr><th>間取り</th><td><%= @room.room_type %></td></tr>
+  <tr><th>面積</th><td><%= "#{@room.area} ㎡" if @room.area %></td></tr>
+  <tr><th>賃料</th><td><%= number_to_currency(@room.rent, unit: "¥", precision: 0) if @room.rent %></td></tr>
+  <tr><th>状態</th><td><%= @room.status_label %></td></tr>
+  <tr><th>備考</th><td><%= @room.notes %></td></tr>
+</table>
+
+<div class="actions-bar">
+  <%= link_to "編集", edit_room_path(@room), class: "btn" %>
+  <%= link_to "一覧に戻る", rooms_path, class: "btn" %>
+  <%= button_to "削除", @room, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "#{@room.room_number} を削除しますか？" } %>
+</div>

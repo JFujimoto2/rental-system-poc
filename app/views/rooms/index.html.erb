@@ -1,0 +1,39 @@
+<% content_for :title, "部屋一覧" %>
+
+<p class="notice"><%= notice %></p>
+
+<h1>部屋一覧</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>建物</th>
+      <th>部屋番号</th>
+      <th>階数</th>
+      <th>間取り</th>
+      <th>面積</th>
+      <th>賃料</th>
+      <th>状態</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @rooms.each do |room| %>
+      <tr>
+        <td><%= link_to room.building.name, room.building %></td>
+        <td><%= link_to room.room_number, room %></td>
+        <td><%= room.floor %></td>
+        <td><%= room.room_type %></td>
+        <td><%= "#{room.area} ㎡" if room.area %></td>
+        <td><%= number_to_currency(room.rent, unit: "¥", precision: 0) if room.rent %></td>
+        <td><%= room.status_label %></td>
+        <td class="actions">
+          <%= link_to "編集", edit_room_path(room) %>
+          <%= button_to "削除", room, method: :delete, class: "btn-link btn-danger", data: { turbo_confirm: "#{room.room_number} を削除しますか？" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "新規部屋登録", new_room_path, class: "btn btn-primary" %>
