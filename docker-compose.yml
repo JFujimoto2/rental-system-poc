@@ -8,6 +8,49 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    command: ./bin/thrust ./bin/rails server -b 0.0.0.0
+    ports:
+      - "3000:3000"
+    environment:
+      RAILS_ENV: production
+      DB_HOST: db
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+      SOLID_QUEUE_IN_PUMA: false
+      RAILS_LOG_TO_STDOUT: true
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - rails_storage:/rails/storage
+
+  worker:
+    build: .
+    command: bundle exec rake solid_queue:start
+    environment:
+      RAILS_ENV: production
+      DB_HOST: db
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+      RAILS_LOG_TO_STDOUT: true
+    depends_on:
+      db:
+        condition: service_healthy
+      web:
+        condition: service_started
+    volumes:
+      - rails_storage:/rails/storage
 
 volumes:
   postgres_data:
+  rails_storage:
