@@ -18,9 +18,11 @@ ja:
         built_year: 築年
         nearest_station: 最寄駅
         owner: オーナー
+        owner_id: オーナー
         notes: 備考
       room:
         building: 建物
+        building_id: 建物
         room_number: 部屋番号
         floor: 階数
         area: 面積
@@ -43,7 +45,9 @@ ja:
         notes: 備考
       master_lease:
         owner: オーナー
+        owner_id: オーナー
         building: 建物
+        building_id: 建物
         contract_type: 契約形態
         start_date: 契約開始日
         end_date: 契約終了日
@@ -75,8 +79,11 @@ ja:
         notes: 備考
       contract:
         room: 部屋
+        room_id: 部屋
         tenant: 入居者
+        tenant_id: 入居者
         master_lease: マスターリース契約
+        master_lease_id: マスターリース契約
         lease_type: 借家種別
         start_date: 契約開始日
         end_date: 契約終了日

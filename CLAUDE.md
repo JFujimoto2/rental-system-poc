@@ -34,11 +34,22 @@ bin/dev                      # Alias for bin/rails server
 
 ### Testing
 ```bash
-bundle exec rspec                        # Run all specs
+bundle exec rspec                        # Run all specs (model, request, system)
 bundle exec rspec spec/models/           # Run model specs
 bundle exec rspec spec/requests/         # Run request specs
+bundle exec rspec spec/system/           # Run system specs (Playwright)
 bundle exec rspec spec/models/room_spec.rb       # Run a single spec file
 bundle exec rspec spec/models/room_spec.rb:10    # Run a specific example by line number
+```
+
+### System Tests (Playwright)
+
+画面の E2E テストには Capybara + Playwright（headless Chromium）を使用。
+`spec/system/` 配下に `type: :system` のスペックを配置する。
+
+```bash
+npx playwright install chromium          # ブラウザのインストール（初回のみ）
+bundle exec rspec spec/system/           # システムテストのみ実行
 ```
 
 ### Code Quality
@@ -71,7 +82,7 @@ bin/rails db:seed            # Load seed data
 - **Background jobs:** Solid Queue (database-backed, runs in Puma process via `SOLID_QUEUE_IN_PUMA`)
 - **Cache:** Solid Cache (database-backed in production, memory store in dev)
 - **Action Cable:** Solid Cable (database-backed)
-- **Testing:** RSpec + FactoryBot + shoulda-matchers
+- **Testing:** RSpec + FactoryBot + shoulda-matchers + Capybara + Playwright
 - **Deployment:** Docker + Kamal; Dockerfile uses multi-stage build with jemalloc and Thruster
 
 ## Key Configuration
