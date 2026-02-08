@@ -11,6 +11,12 @@ Rails.application.routes.draw do
 
   resources :delinquencies, only: [ :index ]
 
+  resources :bulk_clearings, only: [ :new, :create ] do
+    collection do
+      post :preview
+    end
+  end
+
   resources :imports, only: [ :new, :create ] do
     collection do
       post :preview

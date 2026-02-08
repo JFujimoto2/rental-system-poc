@@ -1,0 +1,80 @@
+<h1>入金一括消込 — 照合結果</h1>
+
+<%= form_with(url: bulk_clearings_path, method: :post) do |form| %>
+  <% if @result.matched.any? %>
+    <div class="dashboard-section">
+      <h2>マッチ済み <span class="badge"><%= @result.matched.size %></span></h2>
+      <table>
+        <thead>
+          <tr>
+            <th>消込</th>
+            <th>振込人名</th>
+            <th>振込金額</th>
+            <th>振込日</th>
+            <th>入居者</th>
+            <th>請求金額</th>
+            <th>入金期日</th>
+            <th>照合</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @result.matched.each do |m| %>
+            <tr>
+              <td>
+                <%= check_box_tag "clearings[#{m.tenant_payment.id}][match]", "1", true %>
+                <%= hidden_field_tag "clearings[#{m.tenant_payment.id}][paid_date]", m.csv_row[:date] %>
+                <%= hidden_field_tag "clearings[#{m.tenant_payment.id}][paid_amount]", m.csv_row[:amount] %>
+              </td>
+              <td><%= m.csv_row[:name] %></td>
+              <td><%= number_to_currency(m.csv_row[:amount].to_i) %></td>
+              <td><%= m.csv_row[:date] %></td>
+              <td><%= m.tenant_payment.contract.tenant.name %></td>
+              <td><%= number_to_currency(m.tenant_payment.amount) %></td>
+              <td><%= m.tenant_payment.due_date %></td>
+              <td><span class="badge-match"><%= m.match_type == :exact ? '完全一致' : '部分一致' %></span></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+
+  <% if @result.unmatched.any? %>
+    <div class="dashboard-section">
+      <h2>未マッチ <span class="badge"><%= @result.unmatched.size %></span></h2>
+      <table>
+        <thead>
+          <tr>
+            <th>振込人名</th>
+            <th>振込金額</th>
+            <th>振込日</th>
+            <th>候補</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @result.unmatched.each do |u| %>
+            <tr>
+              <td><%= u.csv_row[:name] %></td>
+              <td><%= number_to_currency(u.csv_row[:amount].to_i) %></td>
+              <td><%= u.csv_row[:date] %></td>
+              <td>
+                <% if u.candidates.any? %>
+                  <% u.candidates.each do |c| %>
+                    <%= c.contract.tenant.name %> (<%= number_to_currency(c.amount) %>)
+                  <% end %>
+                <% else %>
+                  該当なし
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+
+  <div class="actions mt-2">
+    <%= form.submit "選択した入金を消込", class: "btn btn-primary" %>
+    <%= link_to "やり直す", new_bulk_clearing_path, class: "btn" %>
+  </div>
+<% end %>

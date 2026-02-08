@@ -1,0 +1,35 @@
+<h1>入金一括消込</h1>
+
+<div class="card">
+  <div class="card-body">
+    <p>銀行入金明細のCSVファイルをアップロードして、入金予定との照合・一括消込を行います。</p>
+
+    <h3>CSVフォーマット</h3>
+    <table class="mb-1">
+      <thead>
+        <tr>
+          <th>振込日</th>
+          <th>振込人名</th>
+          <th>金額</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2024-06-01</td>
+          <td>山田 太郎</td>
+          <td>100000</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <%= form_with(url: preview_bulk_clearings_path, method: :post, multipart: true, data: { turbo: false }) do |form| %>
+      <div class="field">
+        <%= form.label "bulk_clearing[file]", "CSVファイル" %>
+        <%= form.file_field "bulk_clearing[file]", accept: ".csv" %>
+      </div>
+      <div class="actions mt-2">
+        <%= form.submit "アップロードして照合", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+</div>
