@@ -27,6 +27,34 @@
   <%= button_to "削除", @contract, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "この契約を削除しますか？" } %>
 </div>
 
+<% if @contract.approvals.any? %>
+  <h2>承認状態</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>申請者</th>
+        <th>申請日時</th>
+        <th>状態</th>
+        <th>承認者</th>
+        <th>処理日時</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @contract.approvals.order(created_at: :desc).each do |approval| %>
+        <tr>
+          <td><%= approval.requester.name %></td>
+          <td><%= l(approval.requested_at, format: :short) if approval.requested_at %></td>
+          <td><span class="status-badge status-<%= approval.status %>"><%= approval.status_label %></span></td>
+          <td><%= approval.approver&.name %></td>
+          <td><%= l(approval.decided_at, format: :short) if approval.decided_at %></td>
+          <td><%= link_to "詳細", approval_path(approval) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
 <h2>テナント入金履歴</h2>
 
 <% if @contract.tenant_payments.any? %>

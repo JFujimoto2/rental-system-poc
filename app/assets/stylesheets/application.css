@@ -991,6 +991,40 @@ tbody tr:last-child td {
 tr.aging-critical td { background: #fef2f2; }
 tr.aging-danger td { background: #fff7ed; }
 
+/* ========================================
+   Approval
+   ======================================== */
+.status-badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.status-pending { background: #fef3c7; color: #92400e; }
+.status-approved { background: #d1fae5; color: #065f46; }
+.status-rejected { background: #fee2e2; color: #991b1b; }
+
+.approval-actions {
+  margin-top: 2rem;
+}
+
+.approval-form {
+  display: inline-block;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+  vertical-align: top;
+}
+
+.approval-form .form-group {
+  margin-bottom: 0.5rem;
+}
+
+.approval-form textarea {
+  width: 100%;
+  min-width: 300px;
+}
+
 .mt-1 { margin-top: 0.5rem; }
 .mt-2 { margin-top: 1rem; }
 .mb-0 { margin-bottom: 0; }

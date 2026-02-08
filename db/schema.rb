@@ -10,9 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_08_124959) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_08_131823) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "approvals", force: :cascade do |t|
+    t.bigint "approvable_id", null: false
+    t.string "approvable_type", null: false
+    t.bigint "approver_id"
+    t.text "comment"
+    t.datetime "created_at", null: false
+    t.datetime "decided_at"
+    t.datetime "requested_at"
+    t.bigint "requester_id", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.index ["approvable_type", "approvable_id"], name: "index_approvals_on_approvable"
+    t.index ["approver_id"], name: "index_approvals_on_approver_id"
+    t.index ["requester_id"], name: "index_approvals_on_requester_id"
+  end
 
   create_table "buildings", force: :cascade do |t|
     t.string "address"
@@ -189,6 +205,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_08_124959) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "approvals", "users", column: "approver_id"
+  add_foreign_key "approvals", "users", column: "requester_id"
   add_foreign_key "buildings", "owners"
   add_foreign_key "contracts", "master_leases"
   add_foreign_key "contracts", "rooms"

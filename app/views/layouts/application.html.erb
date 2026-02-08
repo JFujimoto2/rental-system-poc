@@ -65,6 +65,13 @@
               </ul>
             </div>
             <div class="nav-group">
+              <button type="button" class="nav-group-label">承認</button>
+              <ul class="nav-dropdown">
+                <li><%= link_to "承認待ち一覧", approvals_path %></li>
+                <li><%= link_to "自分の申請一覧", my_requests_approvals_path %></li>
+              </ul>
+            </div>
+            <div class="nav-group">
               <button type="button" class="nav-group-label">データ管理</button>
               <ul class="nav-dropdown">
                 <li><%= link_to "インポート", new_import_path %></li>

@@ -10,6 +10,16 @@ Rails.application.routes.draw do
   resources :users, only: [ :index, :edit, :update ]
 
   resources :settlements
+
+  resources :approvals, only: [ :index, :show ] do
+    collection do
+      get :my_requests
+    end
+    member do
+      patch :approve
+      patch :reject
+    end
+  end
   resources :delinquencies, only: [ :index ]
 
   resources :reports, only: [] do

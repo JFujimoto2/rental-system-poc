@@ -4,6 +4,7 @@ class Contract < ApplicationRecord
   belongs_to :master_lease, optional: true
   has_many :tenant_payments, dependent: :destroy
   has_many :settlements, dependent: :destroy
+  has_many :approvals, as: :approvable, dependent: :destroy
 
   enum :lease_type, { ordinary: 0, fixed_term: 1 }
   enum :status, { applying: 0, active: 1, scheduled_termination: 2, terminated: 3 }

@@ -226,8 +226,9 @@ BOM付きUTF-8のCSV出力（Excel対応）。
 物件別収支サマリ・債権滞留表・入金実績レポート。
 詳細は `docs/06_features/12_reports.md` を参照
 
-### Step 13: 承認ワークフロー — 未着手
+### Step 13: 承認ワークフロー — 完了
 契約の作成・変更に対するシンプルな1段階承認フロー。
+詳細は `docs/06_features/13_approval_workflow.md` を参照
 
 ## 全体の関連図
 

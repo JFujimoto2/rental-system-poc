@@ -143,6 +143,14 @@ ja:
         name: 名前
         email: メールアドレス
         role: ロール
+      approval:
+        approvable: 承認対象
+        requester: 申請者
+        approver: 承認者
+        status: 状態
+        requested_at: 申請日時
+        decided_at: 処理日時
+        comment: コメント
     enums:
       room:
         status:
@@ -189,6 +197,11 @@ ja:
           draft: 下書き
           confirmed: 確定
           paid: 精算済
+      approval:
+        status:
+          pending: 承認待ち
+          approved: 承認済
+          rejected: 却下
       user:
         role:
           admin: 管理者

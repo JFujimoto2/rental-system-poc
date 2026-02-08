@@ -24,6 +24,7 @@ class ContractsController < ApplicationController
     @contract = Contract.new(contract_params)
 
     if @contract.save
+      create_approval_if_needed(@contract)
       redirect_to @contract, notice: "契約を登録しました。"
     else
       render :new, status: :unprocessable_entity
@@ -65,5 +66,15 @@ class ContractsController < ApplicationController
 
   def contract_params
     params.expect(contract: [ :room_id, :tenant_id, :master_lease_id, :lease_type, :start_date, :end_date, :rent, :management_fee, :deposit, :key_money, :renewal_fee, :status, :notes ])
+  end
+
+  def create_approval_if_needed(contract)
+    return if current_user.can_approve?
+
+    contract.approvals.create!(
+      requester: current_user,
+      status: :pending,
+      requested_at: Time.current
+    )
   end
 end

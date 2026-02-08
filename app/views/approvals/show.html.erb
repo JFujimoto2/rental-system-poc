@@ -1,0 +1,77 @@
+<div class="page-header">
+  <h1>承認詳細</h1>
+  <div class="page-header-actions">
+    <%= link_to "承認待ち一覧", approvals_path, class: "btn" %>
+  </div>
+</div>
+
+<div class="detail-card">
+  <h2>申請情報</h2>
+  <table class="detail-table">
+    <tr>
+      <th>承認対象</th>
+      <td><%= @approval.approvable_type == 'Contract' ? '転貸借契約' : @approval.approvable_type %></td>
+    </tr>
+    <tr>
+      <th>内容</th>
+      <td>
+        <% if @approval.approvable.is_a?(Contract) %>
+          <%= link_to approvable_summary(@approval.approvable), contract_path(@approval.approvable) %>
+        <% else %>
+          <%= approvable_summary(@approval.approvable) %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <th>申請者</th>
+      <td><%= @approval.requester.name %>（<%= @approval.requester.role_label %>）</td>
+    </tr>
+    <tr>
+      <th>申請日時</th>
+      <td><%= l(@approval.requested_at, format: :short) if @approval.requested_at %></td>
+    </tr>
+    <tr>
+      <th>状態</th>
+      <td><span class="status-badge status-<%= @approval.status %>"><%= @approval.status_label %></span></td>
+    </tr>
+    <% if @approval.approver %>
+      <tr>
+        <th>承認者</th>
+        <td><%= @approval.approver.name %>（<%= @approval.approver.role_label %>）</td>
+      </tr>
+    <% end %>
+    <% if @approval.decided_at %>
+      <tr>
+        <th>処理日時</th>
+        <td><%= l(@approval.decided_at, format: :short) %></td>
+      </tr>
+    <% end %>
+    <% if @approval.comment.present? %>
+      <tr>
+        <th>コメント</th>
+        <td><%= @approval.comment %></td>
+      </tr>
+    <% end %>
+  </table>
+</div>
+
+<% if @approval.pending? && current_user.can_approve? %>
+  <div class="approval-actions">
+    <h2>承認操作</h2>
+    <%= form_with(url: approve_approval_path(@approval), method: :patch, class: "approval-form") do |form| %>
+      <div class="form-group">
+        <%= form.label "approval[comment]", "コメント（任意）" %>
+        <%= form.text_area "approval[comment]", rows: 3 %>
+      </div>
+      <%= form.submit "承認する", class: "btn btn-primary" %>
+    <% end %>
+
+    <%= form_with(url: reject_approval_path(@approval), method: :patch, class: "approval-form") do |form| %>
+      <div class="form-group">
+        <%= form.label "approval[comment]", "却下理由" %>
+        <%= form.text_area "approval[comment]", rows: 3 %>
+      </div>
+      <%= form.submit "却下する", class: "btn btn-danger" %>
+    <% end %>
+  </div>
+<% end %>

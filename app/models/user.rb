@@ -21,6 +21,13 @@ class User < ApplicationRecord
     I18n.t("activerecord.enums.user.role.#{role}")
   end
 
+  has_many :requested_approvals, class_name: "Approval", foreign_key: :requester_id, dependent: :nullify
+  has_many :decided_approvals, class_name: "Approval", foreign_key: :approver_id, dependent: :nullify
+
+  def can_approve?
+    admin? || manager?
+  end
+
   def can_manage_users?
     admin?
   end
