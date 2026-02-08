@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_08_091518) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_08_092317) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -26,6 +26,27 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_08_091518) do
     t.bigint "owner_id"
     t.datetime "updated_at", null: false
     t.index ["owner_id"], name: "index_buildings_on_owner_id"
+  end
+
+  create_table "contracts", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "deposit"
+    t.date "end_date"
+    t.integer "key_money"
+    t.integer "lease_type"
+    t.integer "management_fee"
+    t.bigint "master_lease_id"
+    t.text "notes"
+    t.integer "renewal_fee"
+    t.integer "rent"
+    t.bigint "room_id", null: false
+    t.date "start_date"
+    t.integer "status"
+    t.bigint "tenant_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["master_lease_id"], name: "index_contracts_on_master_lease_id"
+    t.index ["room_id"], name: "index_contracts_on_room_id"
+    t.index ["tenant_id"], name: "index_contracts_on_tenant_id"
   end
 
   create_table "exemption_periods", force: :cascade do |t|
@@ -99,7 +120,23 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_08_091518) do
     t.index ["building_id"], name: "index_rooms_on_building_id"
   end
 
+  create_table "tenants", force: :cascade do |t|
+    t.string "address"
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.string "emergency_contact"
+    t.string "name"
+    t.string "name_kana"
+    t.text "notes"
+    t.string "phone"
+    t.string "postal_code"
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "buildings", "owners"
+  add_foreign_key "contracts", "master_leases"
+  add_foreign_key "contracts", "rooms"
+  add_foreign_key "contracts", "tenants"
   add_foreign_key "exemption_periods", "master_leases"
   add_foreign_key "exemption_periods", "rooms"
   add_foreign_key "master_leases", "buildings"

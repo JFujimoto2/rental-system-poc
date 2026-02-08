@@ -1,0 +1,32 @@
+<% content_for :title, "入居者一覧" %>
+
+<p class="notice"><%= notice %></p>
+
+<h1>入居者一覧</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>入居者名</th>
+      <th>入居者名カナ</th>
+      <th>電話番号</th>
+      <th>メールアドレス</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @tenants.each do |tenant| %>
+      <tr>
+        <td><%= link_to tenant.name, tenant %></td>
+        <td><%= tenant.name_kana %></td>
+        <td><%= tenant.phone %></td>
+        <td><%= tenant.email %></td>
+        <td class="actions">
+          <%= link_to "編集", edit_tenant_path(tenant) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "新規入居者登録", new_tenant_path, class: "btn btn-primary" %>

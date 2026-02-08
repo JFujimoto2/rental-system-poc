@@ -1,0 +1,89 @@
+<%= form_with(model: contract) do |form| %>
+  <% if contract.errors.any? %>
+    <div class="error-messages">
+      <h2><%= contract.errors.count %>件のエラーがあります</h2>
+      <ul>
+        <% contract.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :room_id %>
+    <%= form.collection_select :room_id,
+      Room.includes(:building).order("buildings.name, rooms.room_number").map { |r| ["#{r.building.name} - #{r.room_number}", r.id] },
+      :last, :first, { prompt: "選択してください" } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :tenant_id %>
+    <%= form.collection_select :tenant_id, Tenant.order(:name), :id, :name, { prompt: "選択してください" } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :master_lease_id %>
+    <%= form.collection_select :master_lease_id,
+      MasterLease.includes(:building, :owner).map { |ml| ["#{ml.building.name}（#{ml.owner.name}）", ml.id] },
+      :last, :first, { prompt: "なし（紐づけなし）" } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :lease_type %>
+    <%= form.select :lease_type,
+      Contract.lease_types.keys.map { |k| [I18n.t("activerecord.enums.contract.lease_type.#{k}"), k] },
+      { prompt: "選択してください" } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :start_date %>
+    <%= form.date_field :start_date %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :end_date %>
+    <%= form.date_field :end_date %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :rent %>
+    <%= form.number_field :rent %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :management_fee %>
+    <%= form.number_field :management_fee %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :deposit %>
+    <%= form.number_field :deposit %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :key_money %>
+    <%= form.number_field :key_money %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :renewal_fee %>
+    <%= form.number_field :renewal_fee %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :status %>
+    <%= form.select :status,
+      Contract.statuses.keys.map { |k| [I18n.t("activerecord.enums.contract.status.#{k}"), k] },
+      { prompt: "選択してください" } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :notes %>
+    <%= form.text_area :notes, rows: 4 %>
+  </div>
+
+  <div class="form-actions">
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+<% end %>

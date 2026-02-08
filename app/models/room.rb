@@ -1,5 +1,6 @@
 class Room < ApplicationRecord
   belongs_to :building
+  has_many :contracts
 
   enum :status, { vacant: 0, occupied: 1, notice: 2 }
 

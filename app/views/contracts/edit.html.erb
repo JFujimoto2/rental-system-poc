@@ -1,0 +1,10 @@
+<% content_for :title, "契約編集" %>
+
+<h1>契約編集</h1>
+
+<%= render "form", contract: @contract %>
+
+<div class="actions-bar">
+  <%= link_to "詳細に戻る", @contract, class: "btn" %>
+  <%= link_to "一覧に戻る", contracts_path, class: "btn" %>
+</div>

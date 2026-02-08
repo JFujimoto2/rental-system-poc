@@ -1,0 +1,54 @@
+<% content_for :title, @tenant.name %>
+
+<p class="notice"><%= notice %></p>
+
+<h1><%= @tenant.name %></h1>
+
+<table class="detail-table">
+  <tr><th>入居者名カナ</th><td><%= @tenant.name_kana %></td></tr>
+  <tr><th>電話番号</th><td><%= @tenant.phone %></td></tr>
+  <tr><th>メールアドレス</th><td><%= @tenant.email %></td></tr>
+  <tr><th>郵便番号</th><td><%= @tenant.postal_code %></td></tr>
+  <tr><th>現住所</th><td><%= @tenant.address %></td></tr>
+  <tr><th>緊急連絡先</th><td><%= @tenant.emergency_contact %></td></tr>
+  <tr><th>備考</th><td><%= @tenant.notes %></td></tr>
+</table>
+
+<div class="actions-bar">
+  <%= link_to "編集", edit_tenant_path(@tenant), class: "btn" %>
+  <%= link_to "一覧に戻る", tenants_path, class: "btn" %>
+  <%= button_to "削除", @tenant, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "#{@tenant.name} を削除しますか？" } %>
+</div>
+
+<h2>契約一覧</h2>
+
+<% if @tenant.contracts.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>建物</th>
+        <th>部屋</th>
+        <th>借家種別</th>
+        <th>契約開始日</th>
+        <th>契約終了日</th>
+        <th>月額賃料</th>
+        <th>状態</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @tenant.contracts.includes(room: :building).each do |contract| %>
+        <tr>
+          <td><%= link_to contract.room.building.name, contract.room.building %></td>
+          <td><%= link_to contract.room.room_number, contract.room %></td>
+          <td><%= contract.lease_type_label %></td>
+          <td><%= contract.start_date %></td>
+          <td><%= contract.end_date %></td>
+          <td><%= number_to_currency(contract.rent, unit: "¥", precision: 0) if contract.rent %></td>
+          <td><%= link_to contract.status_label, contract %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>契約がありません。</p>
+<% end %>

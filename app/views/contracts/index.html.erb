@@ -1,0 +1,41 @@
+<% content_for :title, "契約一覧" %>
+
+<p class="notice"><%= notice %></p>
+
+<h1>契約一覧</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>建物</th>
+      <th>部屋</th>
+      <th>入居者</th>
+      <th>借家種別</th>
+      <th>契約開始日</th>
+      <th>契約終了日</th>
+      <th>月額賃料</th>
+      <th>状態</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @contracts.each do |contract| %>
+      <tr>
+        <td><%= link_to contract.room.building.name, contract.room.building %></td>
+        <td><%= link_to contract.room.room_number, contract.room %></td>
+        <td><%= link_to contract.tenant.name, contract.tenant %></td>
+        <td><%= contract.lease_type_label %></td>
+        <td><%= contract.start_date %></td>
+        <td><%= contract.end_date %></td>
+        <td><%= number_to_currency(contract.rent, unit: "¥", precision: 0) if contract.rent %></td>
+        <td><%= contract.status_label %></td>
+        <td class="actions">
+          <%= link_to "詳細", contract %>
+          <%= link_to "編集", edit_contract_path(contract) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "新規契約登録", new_contract_path, class: "btn btn-primary" %>

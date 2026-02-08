@@ -20,3 +20,34 @@
   <%= link_to "一覧に戻る", rooms_path, class: "btn" %>
   <%= button_to "削除", @room, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "#{@room.room_number} を削除しますか？" } %>
 </div>
+
+<h2>契約履歴</h2>
+
+<% if @room.contracts.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>入居者</th>
+        <th>借家種別</th>
+        <th>契約開始日</th>
+        <th>契約終了日</th>
+        <th>月額賃料</th>
+        <th>状態</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @room.contracts.includes(:tenant).order(start_date: :desc).each do |contract| %>
+        <tr>
+          <td><%= link_to contract.tenant.name, contract.tenant %></td>
+          <td><%= contract.lease_type_label %></td>
+          <td><%= contract.start_date %></td>
+          <td><%= contract.end_date %></td>
+          <td><%= number_to_currency(contract.rent, unit: "¥", precision: 0) if contract.rent %></td>
+          <td><%= link_to contract.status_label, contract %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>契約履歴がありません。</p>
+<% end %>

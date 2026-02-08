@@ -1,0 +1,9 @@
+<% content_for :title, "入居者登録" %>
+
+<h1>入居者登録</h1>
+
+<%= render "form", tenant: @tenant %>
+
+<div class="actions-bar">
+  <%= link_to "一覧に戻る", tenants_path, class: "btn" %>
+</div>

@@ -1,0 +1,28 @@
+<% content_for :title, "#{@contract.room.building.name} #{@contract.room.room_number} - 契約詳細" %>
+
+<p class="notice"><%= notice %></p>
+
+<h1><%= @contract.room.building.name %> <%= @contract.room.room_number %> — 契約詳細</h1>
+
+<table class="detail-table">
+  <tr><th>建物</th><td><%= link_to @contract.room.building.name, @contract.room.building %></td></tr>
+  <tr><th>部屋</th><td><%= link_to @contract.room.room_number, @contract.room %></td></tr>
+  <tr><th>入居者</th><td><%= link_to @contract.tenant.name, @contract.tenant %></td></tr>
+  <tr><th>マスターリース契約</th><td><%= link_to @contract.master_lease.building.name, @contract.master_lease if @contract.master_lease %></td></tr>
+  <tr><th>借家種別</th><td><%= @contract.lease_type_label %></td></tr>
+  <tr><th>契約開始日</th><td><%= @contract.start_date %></td></tr>
+  <tr><th>契約終了日</th><td><%= @contract.end_date %></td></tr>
+  <tr><th>月額賃料</th><td><%= number_to_currency(@contract.rent, unit: "¥", precision: 0) if @contract.rent %></td></tr>
+  <tr><th>管理費</th><td><%= number_to_currency(@contract.management_fee, unit: "¥", precision: 0) if @contract.management_fee %></td></tr>
+  <tr><th>敷金</th><td><%= number_to_currency(@contract.deposit, unit: "¥", precision: 0) if @contract.deposit %></td></tr>
+  <tr><th>礼金</th><td><%= number_to_currency(@contract.key_money, unit: "¥", precision: 0) if @contract.key_money %></td></tr>
+  <tr><th>更新料</th><td><%= number_to_currency(@contract.renewal_fee, unit: "¥", precision: 0) if @contract.renewal_fee %></td></tr>
+  <tr><th>状態</th><td><%= @contract.status_label %></td></tr>
+  <tr><th>備考</th><td><%= @contract.notes %></td></tr>
+</table>
+
+<div class="actions-bar">
+  <%= link_to "編集", edit_contract_path(@contract), class: "btn" %>
+  <%= link_to "一覧に戻る", contracts_path, class: "btn" %>
+  <%= button_to "削除", @contract, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "この契約を削除しますか？" } %>
+</div>

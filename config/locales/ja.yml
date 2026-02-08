@@ -7,6 +7,8 @@ ja:
       master_lease: マスターリース契約
       exemption_period: 免責期間
       rent_revision: 賃料改定
+      tenant: 入居者
+      contract: 転貸借契約
     attributes:
       building:
         name: 建物名
@@ -62,6 +64,29 @@ ja:
         old_rent: 改定前保証賃料
         new_rent: 改定後保証賃料
         notes: 改定理由
+      tenant:
+        name: 入居者名
+        name_kana: 入居者名カナ
+        phone: 電話番号
+        email: メールアドレス
+        postal_code: 郵便番号
+        address: 現住所
+        emergency_contact: 緊急連絡先
+        notes: 備考
+      contract:
+        room: 部屋
+        tenant: 入居者
+        master_lease: マスターリース契約
+        lease_type: 借家種別
+        start_date: 契約開始日
+        end_date: 契約終了日
+        rent: 月額賃料
+        management_fee: 管理費
+        deposit: 敷金
+        key_money: 礼金
+        renewal_fee: 更新料
+        status: 状態
+        notes: 備考
     enums:
       room:
         status:
@@ -74,6 +99,15 @@ ja:
           management: 管理委託
           own: 自社物件
         status:
+          active: 契約中
+          scheduled_termination: 解約予定
+          terminated: 解約済
+      contract:
+        lease_type:
+          ordinary: 普通借家
+          fixed_term: 定期借家
+        status:
+          applying: 申込
           active: 契約中
           scheduled_termination: 解約予定
           terminated: 解約済

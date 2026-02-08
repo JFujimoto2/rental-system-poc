@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :contracts
+  resources :tenants
   resources :master_leases
   resources :buildings
   resources :rooms
