@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   resources :buildings
   resources :rooms
+  resources :owners
 
   root "buildings#index"
 

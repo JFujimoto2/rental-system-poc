@@ -11,6 +11,11 @@
   <% end %>
 
   <div class="field">
+    <%= form.label :owner_id %>
+    <%= form.collection_select :owner_id, Owner.order(:name), :id, :name, prompt: "選択してください" %>
+  </div>
+
+  <div class="field">
     <%= form.label :name %>
     <%= form.text_field :name %>
   </div>

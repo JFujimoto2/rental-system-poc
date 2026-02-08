@@ -3,6 +3,7 @@ ja:
     models:
       building: 建物
       room: 部屋
+      owner: オーナー
     attributes:
       building:
         name: 建物名
@@ -11,6 +12,7 @@ ja:
         floors: 階数
         built_year: 築年
         nearest_station: 最寄駅
+        owner: オーナー
         notes: 備考
       room:
         building: 建物
@@ -20,6 +22,19 @@ ja:
         rent: 賃料
         status: 状態
         room_type: 間取り
+        notes: 備考
+      owner:
+        name: オーナー名
+        name_kana: オーナー名カナ
+        phone: 電話番号
+        email: メールアドレス
+        postal_code: 郵便番号
+        address: 住所
+        bank_name: 銀行名
+        bank_branch: 支店名
+        account_type: 口座種別
+        account_number: 口座番号
+        account_holder: 口座名義
         notes: 備考
     enums:
       room:

@@ -8,6 +8,7 @@
   <thead>
     <tr>
       <th>建物名</th>
+      <th>オーナー</th>
       <th>住所</th>
       <th>構造</th>
       <th>階数</th>
@@ -21,6 +22,7 @@
     <% @buildings.each do |building| %>
       <tr>
         <td><%= link_to building.name, building %></td>
+        <td><%= link_to building.owner.name, building.owner if building.owner %></td>
         <td><%= building.address %></td>
         <td><%= building.building_type %></td>
         <td><%= building.floors %></td>

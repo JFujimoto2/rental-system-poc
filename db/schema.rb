@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_08_082833) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_08_090053) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -23,6 +23,25 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_08_082833) do
     t.string "name"
     t.string "nearest_station"
     t.text "notes"
+    t.bigint "owner_id"
+    t.datetime "updated_at", null: false
+    t.index ["owner_id"], name: "index_buildings_on_owner_id"
+  end
+
+  create_table "owners", force: :cascade do |t|
+    t.string "account_holder"
+    t.string "account_number"
+    t.string "account_type"
+    t.string "address"
+    t.string "bank_branch"
+    t.string "bank_name"
+    t.datetime "created_at", null: false
+    t.string "email"
+    t.string "name"
+    t.string "name_kana"
+    t.text "notes"
+    t.string "phone"
+    t.string "postal_code"
     t.datetime "updated_at", null: false
   end
 
@@ -40,5 +59,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_08_082833) do
     t.index ["building_id"], name: "index_rooms_on_building_id"
   end
 
+  add_foreign_key "buildings", "owners"
   add_foreign_key "rooms", "buildings"
 end

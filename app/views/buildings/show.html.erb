@@ -5,6 +5,7 @@
 <h1><%= @building.name %></h1>
 
 <table class="detail-table">
+  <tr><th>オーナー</th><td><%= link_to @building.owner.name, @building.owner if @building.owner %></td></tr>
   <tr><th>住所</th><td><%= @building.address %></td></tr>
   <tr><th>構造</th><td><%= @building.building_type %></td></tr>
   <tr><th>階数</th><td><%= @building.floors %></td></tr>

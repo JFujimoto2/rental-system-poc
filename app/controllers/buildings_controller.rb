@@ -3,7 +3,7 @@ class BuildingsController < ApplicationController
 
   # GET /buildings or /buildings.json
   def index
-    @buildings = Building.all
+    @buildings = Building.includes(:owner).all
   end
 
   # GET /buildings/1 or /buildings/1.json
@@ -65,6 +65,6 @@ class BuildingsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def building_params
-      params.expect(building: [ :name, :address, :building_type, :floors, :built_year, :nearest_station, :notes ])
+      params.expect(building: [ :owner_id, :name, :address, :building_type, :floors, :built_year, :nearest_station, :notes ])
     end
 end

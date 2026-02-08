@@ -1,0 +1,35 @@
+<% content_for :title, "オーナー一覧" %>
+
+<p class="notice"><%= notice %></p>
+
+<h1>オーナー一覧</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>オーナー名</th>
+      <th>電話番号</th>
+      <th>メールアドレス</th>
+      <th>住所</th>
+      <th>所有建物数</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @owners.each do |owner| %>
+      <tr>
+        <td><%= link_to owner.name, owner %></td>
+        <td><%= owner.phone %></td>
+        <td><%= owner.email %></td>
+        <td><%= owner.address %></td>
+        <td><%= owner.buildings.size %></td>
+        <td class="actions">
+          <%= link_to "編集", edit_owner_path(owner) %>
+          <%= button_to "削除", owner, method: :delete, class: "btn-link btn-danger", data: { turbo_confirm: "#{owner.name} を削除しますか？" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "新規オーナー登録", new_owner_path, class: "btn btn-primary" %>

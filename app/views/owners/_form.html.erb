@@ -1,0 +1,80 @@
+<%= form_with(model: owner) do |form| %>
+  <% if owner.errors.any? %>
+    <div class="error-messages">
+      <h2><%= owner.errors.count %>件のエラーがあります</h2>
+      <ul>
+        <% owner.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <h2>基本情報</h2>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :name_kana %>
+    <%= form.text_field :name_kana %>
+  </div>
+
+  <div class="field">
+    <%= form.label :phone %>
+    <%= form.text_field :phone %>
+  </div>
+
+  <div class="field">
+    <%= form.label :email %>
+    <%= form.text_field :email %>
+  </div>
+
+  <div class="field">
+    <%= form.label :postal_code %>
+    <%= form.text_field :postal_code %>
+  </div>
+
+  <div class="field">
+    <%= form.label :address %>
+    <%= form.text_field :address %>
+  </div>
+
+  <h2>口座情報</h2>
+
+  <div class="field">
+    <%= form.label :bank_name %>
+    <%= form.text_field :bank_name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :bank_branch %>
+    <%= form.text_field :bank_branch %>
+  </div>
+
+  <div class="field">
+    <%= form.label :account_type %>
+    <%= form.select :account_type, %w[普通 当座], include_blank: "選択してください" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :account_number %>
+    <%= form.text_field :account_number %>
+  </div>
+
+  <div class="field">
+    <%= form.label :account_holder %>
+    <%= form.text_field :account_holder %>
+  </div>
+
+  <div class="field">
+    <%= form.label :notes %>
+    <%= form.textarea :notes, rows: 4 %>
+  </div>
+
+  <div class="form-actions">
+    <%= form.submit class: "btn btn-primary" %>
+  </div>
+<% end %>

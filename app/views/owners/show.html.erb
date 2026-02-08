@@ -1,0 +1,57 @@
+<% content_for :title, @owner.name %>
+
+<p class="notice"><%= notice %></p>
+
+<h1><%= @owner.name %></h1>
+
+<table class="detail-table">
+  <tr><th>オーナー名カナ</th><td><%= @owner.name_kana %></td></tr>
+  <tr><th>電話番号</th><td><%= @owner.phone %></td></tr>
+  <tr><th>メールアドレス</th><td><%= @owner.email %></td></tr>
+  <tr><th>郵便番号</th><td><%= @owner.postal_code %></td></tr>
+  <tr><th>住所</th><td><%= @owner.address %></td></tr>
+  <tr><th>備考</th><td><%= @owner.notes %></td></tr>
+</table>
+
+<h2>口座情報</h2>
+
+<table class="detail-table">
+  <tr><th>銀行名</th><td><%= @owner.bank_name %></td></tr>
+  <tr><th>支店名</th><td><%= @owner.bank_branch %></td></tr>
+  <tr><th>口座種別</th><td><%= @owner.account_type %></td></tr>
+  <tr><th>口座番号</th><td><%= @owner.account_number %></td></tr>
+  <tr><th>口座名義</th><td><%= @owner.account_holder %></td></tr>
+</table>
+
+<div class="actions-bar">
+  <%= link_to "編集", edit_owner_path(@owner), class: "btn" %>
+  <%= link_to "一覧に戻る", owners_path, class: "btn" %>
+  <%= button_to "削除", @owner, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "#{@owner.name} を削除しますか？" } %>
+</div>
+
+<h2>所有建物</h2>
+
+<% if @owner.buildings.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>建物名</th>
+        <th>住所</th>
+        <th>構造</th>
+        <th>部屋数</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @owner.buildings.each do |building| %>
+        <tr>
+          <td><%= link_to building.name, building %></td>
+          <td><%= building.address %></td>
+          <td><%= building.building_type %></td>
+          <td><%= building.rooms.size %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>所有建物が登録されていません。</p>
+<% end %>

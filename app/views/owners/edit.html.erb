@@ -1,0 +1,10 @@
+<% content_for :title, "オーナー編集" %>
+
+<h1>オーナー編集</h1>
+
+<%= render "form", owner: @owner %>
+
+<div>
+  <%= link_to "詳細に戻る", @owner %> |
+  <%= link_to "一覧に戻る", owners_path %>
+</div>
