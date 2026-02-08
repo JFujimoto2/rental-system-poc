@@ -1,6 +1,6 @@
 # MonthlyOwnerPaymentGenerationJob — オーナー支払自動生成
 
-## ステータス: 未着手
+## ステータス: 実装済
 
 ## 概要
 

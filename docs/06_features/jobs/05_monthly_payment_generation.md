@@ -1,6 +1,6 @@
 # MonthlyPaymentGenerationJob — 入金予定自動生成
 
-## ステータス: 未着手
+## ステータス: 実装済
 
 ## 概要
 
