@@ -9,18 +9,60 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 技術スタック: Rails 8.1 / Ruby 3.3 / PostgreSQL 16 / Docker / AWS (EC2 + RDS) / GitHub Actions / Claude Code
 
-### 外部連携
+### 実装済み機能（Step 1〜19）
+
+| Step | 機能 | モデル |
+|------|------|--------|
+| 1 | 建物・部屋 CRUD | Building, Room |
+| 2 | オーナー CRUD | Owner |
+| 3 | マスターリース契約（免責期間・賃料改定） | MasterLease, ExemptionPeriod, RentRevision |
+| 4 | 入居者・転貸借契約 | Tenant, Contract |
+| 5 | 入出金管理 | TenantPayment, OwnerPayment |
+| 6 | Excel インポート（建物・部屋） | — |
+| 7 | 認証（Entra ID / Google OAuth2 / 4ロール） | User |
+| 7.5 | 検索 + CSV ダウンロード（全画面） | — |
+| 8 | ダッシュボード（KPI） | — |
+| 9 | 滞納管理（エイジング・CSV） | — |
+| 10 | 入金一括消込（CSV 照合） | — |
+| 11 | 解約精算（日割り・敷金返還） | Settlement |
+| 12 | 帳票（収支・エイジング・入金サマリ） | — |
+| 13 | 承認ワークフロー（1段階） | Approval |
+| 14 | バッチジョブ 8件 | — |
+| 15 | 業者マスタ + 工事管理 | Vendor, Construction |
+| 16 | 契約更新管理 | ContractRenewal |
+| 17 | 問い合わせ・修繕依頼 | Inquiry |
+| 18 | 鍵管理 | Key, KeyHistory |
+| 19 | 保険管理 | Insurance |
+
+**実績:** 21モデル / 約70画面 / 554テスト（行カバレッジ 94.9%）/ バッチジョブ 8件
+
+### 今後の候補（未実装）
+
+| 優先度 | 機能 | 概要 |
+|--------|------|------|
+| 高 | 外部連携モック | OBIC7 会計仕訳、アプラス口座振替（ファイル出力のモック実装） |
+| 高 | 通知機能 | Action Mailer でメール通知（滞納・契約期限・保険期限） |
+| 中 | 監査ログ | 操作履歴の記録（誰がいつ何を変更したか） |
+| 中 | 本番デプロイ | Kamal で AWS EC2 + RDS にデプロイ |
+| 低 | ブランチカバレッジ向上 | 現在 70.3% → 80% 目標 |
+| 低 | パフォーマンス最適化 | N+1 クエリ検出（Bullet gem）、ページネーション |
+
+### 外部連携（本番移行時に対応）
 - OBIC7: FTP で会計仕訳データ連携（5本）
 - アプラス: ファイルで口座振替依頼・結果取込（2本）
 - GoWeb: ファイルでエンド契約データ出力
 - 保証会社: 保証会社連携管理
 
 ### ドキュメント構成
-- `docs/01_investigation/` — 現行システム調査結果
-- `docs/02_plan/` — PoC計画・進め方
+- `docs/01_investigation/` — 現行システム調査結果（git 管理外・ローカルのみ）
+- `docs/02_plan/` — PoC計画・ロードマップ・今後の候補
 - `docs/03_tech_reference/` — 技術参考資料
 - `docs/04_db_analysis/` — DB調査・分析結果
 - `docs/05_screenshots/` — 画面キャプチャ
+- `docs/06_features/` — 機能仕様（各 Step のドキュメント）
+- `docs/06_features/jobs/` — バッチジョブ仕様（9件）
+- `docs/07_coverage/` — テストカバレッジレポート
+- `docs/infra/` — AWS インフラ構成（Terraform / ECS / CI/CD / 監視 / セキュリティ）
 
 ## Common Commands
 
