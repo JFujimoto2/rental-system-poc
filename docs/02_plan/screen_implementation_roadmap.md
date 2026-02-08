@@ -232,7 +232,45 @@ BOM付きUTF-8のCSV出力（Excel対応）。
 
 ### Step 14: バッチジョブ（定期実行タスク） — 完了
 滞納自動検出・契約/部屋ステータス自動更新・入金/支払予定の月次自動生成。
-詳細は `docs/06_features/14_batch_jobs.md` を参照
+詳細は `docs/06_features/jobs/` を参照
+
+---
+
+## 追加機能（Step 15〜20）
+
+### Step 15: 業者マスタ + 工事管理 — 完了
+業者（Vendor）の CRUD と工事（Construction）の管理。原状回復・修繕等の発注〜完了〜請求。
+詳細は `docs/06_features/14_vendor_construction.md` を参照
+
+### Step 16: 契約更新管理 — 完了
+契約更新（ContractRenewal）の追跡。通知→交渉→合意→新契約作成の一連のフロー。
+バッチジョブ（ContractRenewalReminderJob）で期限3ヶ月前の自動リマインド。
+詳細は `docs/06_features/15_contract_renewal.md` を参照
+
+### Step 17: 問い合わせ・修繕依頼 — 完了
+入居者からの問い合わせ（Inquiry）管理。修繕依頼→工事連携。
+詳細は `docs/06_features/16_inquiry.md` を参照
+
+### Step 18: 鍵管理 — 完了
+部屋の鍵（Key）と貸出/返却の履歴（KeyHistory）管理。
+詳細は `docs/06_features/17_key_management.md` を参照
+
+### Step 19: 保険管理 — 完了
+建物・部屋単位の保険（Insurance）管理。バッチジョブ（InsuranceExpirationJob）で期限切れアラート。
+詳細は `docs/06_features/18_insurance.md` を参照
+
+---
+
+## 今後の候補（未実装）
+
+| 優先度 | 機能 | 概要 |
+|--------|------|------|
+| 高 | 外部連携モック | OBIC7 会計仕訳、アプラス口座振替（ファイル出力のモック実装） |
+| 高 | 通知機能 | Action Mailer でメール通知（滞納・契約期限・保険期限） |
+| 中 | 監査ログ | 操作履歴の記録（誰がいつ何を変更したか） |
+| 中 | 本番デプロイ | Kamal で AWS EC2 + RDS にデプロイ |
+| 低 | ブランチカバレッジ向上 | 現在 70.3% → 80% 目標 |
+| 低 | パフォーマンス最適化 | N+1 クエリ検出（Bullet gem）、ページネーション |
 
 ## 全体の関連図
 
