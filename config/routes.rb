@@ -22,7 +22,7 @@ Rails.application.routes.draw do
   get "auth/failure", to: "sessions#failure"
   post "dev_login", to: "sessions#dev_login", as: :login_as if Rails.env.local?
 
-  root "buildings#index"
+  root "dashboard#index"
 
   get "up" => "rails/health#show", as: :rails_health_check
 end

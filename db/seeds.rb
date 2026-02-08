@@ -151,7 +151,7 @@ occupied_rooms.each_with_index do |room, i|
   tenant = tenants[i % tenants.size]
   ml = master_leases.find { |m| m.building_id == room.building_id && m.active? }
   lease_type = %i[ordinary ordinary ordinary fixed_term].sample
-  start_date = Date.new(2024, [1, 4, 7, 10].sample, 1)
+  start_date = Date.new(2024, [ 1, 4, 7, 10 ].sample, 1)
 
   contract = Contract.create!(
     room: room,
@@ -265,10 +265,10 @@ contracts.select { |c| c.active? || c.scheduled_termination? }.each do |contract
   # 当月分（未入金・一部入金・延滞を混ぜる）
   current_status = %i[unpaid unpaid partial overdue].sample
   paid_amt = case current_status
-             when :partial then (contract.rent * 0.5).to_i
-             when :paid then contract.rent + contract.management_fee
-             else nil
-             end
+  when :partial then (contract.rent * 0.5).to_i
+  when :paid then contract.rent + contract.management_fee
+  else nil
+  end
   paid_dt = current_status == :partial ? Date.current - 2.days : nil
 
   TenantPayment.create!(
@@ -304,7 +304,7 @@ master_leases.select { |ml| ml.guaranteed_rent.present? }.each do |ml|
   6.times do |i|
     month = Date.new(2024, 7 + i > 12 ? i - 5 : 7 + i, 1)
     month = month.next_year if 7 + i > 12
-    deduction = [0, 0, 0, 10_000, 20_000, 50_000].sample
+    deduction = [ 0, 0, 0, 10_000, 20_000, 50_000 ].sample
 
     OwnerPayment.create!(
       master_lease: ml,

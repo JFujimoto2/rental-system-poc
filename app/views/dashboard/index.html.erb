@@ -1,0 +1,133 @@
+<h1>ダッシュボード</h1>
+
+<div class="dashboard-grid">
+  <%# 入居状況 %>
+  <div class="dashboard-card">
+    <div class="card-header">入居状況</div>
+    <div class="card-body">
+      <div class="kpi-main">
+        <span class="kpi-value"><%= @occupancy_rate %>%</span>
+        <span class="kpi-label">入居率</span>
+      </div>
+      <div class="kpi-details">
+        <div class="kpi-detail-item">
+          <span class="kpi-detail-value"><%= @total_rooms %></span>
+          <span class="kpi-detail-label">総部屋数</span>
+        </div>
+        <div class="kpi-detail-item">
+          <span class="kpi-detail-value text-success"><%= @occupied_rooms %></span>
+          <span class="kpi-detail-label">入居中</span>
+        </div>
+        <div class="kpi-detail-item">
+          <span class="kpi-detail-value text-warning"><%= @notice_rooms %></span>
+          <span class="kpi-detail-label">退去予定</span>
+        </div>
+        <div class="kpi-detail-item">
+          <span class="kpi-detail-value text-danger"><%= @vacant_rooms %></span>
+          <span class="kpi-detail-label">空室</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%# 滞納状況 %>
+  <div class="dashboard-card">
+    <div class="card-header">滞納状況</div>
+    <div class="card-body">
+      <div class="kpi-main">
+        <span class="kpi-value <%= 'text-danger' if @overdue_count > 0 %>"><%= @overdue_count %></span>
+        <span class="kpi-label">滞納件数</span>
+      </div>
+      <div class="kpi-details">
+        <div class="kpi-detail-item">
+          <span class="kpi-detail-value"><%= number_to_currency(@overdue_amount) %></span>
+          <span class="kpi-detail-label">滞納額合計</span>
+        </div>
+        <div class="kpi-detail-item">
+          <span class="kpi-detail-value <%= 'text-warning' if @unpaid_due_count > 0 %>"><%= @unpaid_due_count %></span>
+          <span class="kpi-detail-label">期日超過未入金</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%# オーナー支払 %>
+  <div class="dashboard-card">
+    <div class="card-header">オーナー支払</div>
+    <div class="card-body">
+      <div class="kpi-main">
+        <span class="kpi-value <%= 'text-warning' if @owner_payment_unpaid_count > 0 %>"><%= @owner_payment_unpaid_count %></span>
+        <span class="kpi-label">未払件数</span>
+      </div>
+      <div class="kpi-details">
+        <div class="kpi-detail-item">
+          <%= link_to "オーナー支払一覧へ", owner_payments_path, class: "kpi-link" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# 契約更新予定 %>
+<div class="dashboard-section">
+  <h2>契約更新予定（3ヶ月以内）<span class="badge"><%= @renewal_contracts.size %></span></h2>
+  <% if @renewal_contracts.any? %>
+    <table>
+      <thead>
+        <tr>
+          <th>建物</th>
+          <th>部屋</th>
+          <th>入居者</th>
+          <th>契約終了日</th>
+          <th>残日数</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @renewal_contracts.each do |contract| %>
+          <tr>
+            <td><%= contract.room.building.name %></td>
+            <td><%= contract.room.room_number %></td>
+            <td><%= contract.tenant.name %></td>
+            <td><%= contract.end_date %></td>
+            <td><%= (contract.end_date - Date.current).to_i %>日</td>
+            <td><%= link_to "詳細", contract_path(contract) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p class="empty-message">該当する契約はありません。</p>
+  <% end %>
+</div>
+
+<%# 解約予定 %>
+<div class="dashboard-section">
+  <h2>解約予定<span class="badge"><%= @terminating_contracts.size %></span></h2>
+  <% if @terminating_contracts.any? %>
+    <table>
+      <thead>
+        <tr>
+          <th>建物</th>
+          <th>部屋</th>
+          <th>入居者</th>
+          <th>契約終了日</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @terminating_contracts.each do |contract| %>
+          <tr>
+            <td><%= contract.room.building.name %></td>
+            <td><%= contract.room.room_number %></td>
+            <td><%= contract.tenant.name %></td>
+            <td><%= contract.end_date %></td>
+            <td><%= link_to "詳細", contract_path(contract) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p class="empty-message">該当する契約はありません。</p>
+  <% end %>
+</div>
