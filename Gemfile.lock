@@ -108,6 +108,7 @@ GEM
     debug (1.11.1)
       irb (~> 1.10)
       reline (>= 0.3.8)
+    diff-lcs (1.6.2)
     dotenv (3.2.0)
     drb (2.2.3)
     ed25519 (1.4.0)
@@ -115,6 +116,11 @@ GEM
     erubi (1.13.1)
     et-orbi (1.4.0)
       tzinfo
+    factory_bot (6.5.6)
+      activesupport (>= 6.1.0)
+    factory_bot_rails (6.5.1)
+      factory_bot (~> 6.5)
+      railties (>= 6.1.0)
     ffi (1.17.3-aarch64-linux-gnu)
     ffi (1.17.3-aarch64-linux-musl)
     ffi (1.17.3-arm-linux-gnu)
@@ -265,6 +271,9 @@ GEM
     rails-html-sanitizer (1.6.2)
       loofah (~> 2.21)
       nokogiri (>= 1.15.7, != 1.16.7, != 1.16.6, != 1.16.5, != 1.16.4, != 1.16.3, != 1.16.2, != 1.16.1, != 1.16.0.rc1, != 1.16.0)
+    rails-i18n (8.1.0)
+      i18n (>= 0.7, < 2)
+      railties (>= 8.0.0, < 9)
     railties (8.1.2)
       actionpack (= 8.1.2)
       activesupport (= 8.1.2)
@@ -284,6 +293,23 @@ GEM
     reline (0.6.3)
       io-console (~> 0.5)
     rexml (3.4.4)
+    rspec-core (3.13.6)
+      rspec-support (~> 3.13.0)
+    rspec-expectations (3.13.5)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-mocks (3.13.7)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-rails (8.0.2)
+      actionpack (>= 7.2)
+      activesupport (>= 7.2)
+      railties (>= 7.2)
+      rspec-core (~> 3.13)
+      rspec-expectations (~> 3.13)
+      rspec-mocks (~> 3.13)
+      rspec-support (~> 3.13)
+    rspec-support (3.13.7)
     rubocop (1.84.1)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
@@ -324,6 +350,8 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 4.0)
       websocket (~> 1.0)
+    shoulda-matchers (7.0.1)
+      activesupport (>= 7.1)
     solid_cable (3.0.12)
       actioncable (>= 7.2)
       activejob (>= 7.2)
@@ -400,6 +428,7 @@ DEPENDENCIES
   bundler-audit
   capybara
   debug
+  factory_bot_rails (~> 6.5)
   image_processing (~> 1.2)
   importmap-rails
   jbuilder
@@ -408,8 +437,11 @@ DEPENDENCIES
   propshaft
   puma (>= 5.0)
   rails (~> 8.1.2)
+  rails-i18n (~> 8.1)
+  rspec-rails (~> 8.0)
   rubocop-rails-omakase
   selenium-webdriver
+  shoulda-matchers (~> 7.0)
   solid_cable
   solid_cache
   solid_queue

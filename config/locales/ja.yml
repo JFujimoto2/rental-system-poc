@@ -1,2 +1,29 @@
 ja:
-  hello: "こんにちは"
+  activerecord:
+    models:
+      building: 建物
+      room: 部屋
+    attributes:
+      building:
+        name: 建物名
+        address: 住所
+        building_type: 構造
+        floors: 階数
+        built_year: 築年
+        nearest_station: 最寄駅
+        notes: 備考
+      room:
+        building: 建物
+        room_number: 部屋番号
+        floor: 階数
+        area: 面積
+        rent: 賃料
+        status: 状態
+        room_type: 間取り
+        notes: 備考
+    enums:
+      room:
+        status:
+          vacant: 空室
+          occupied: 入居中
+          notice: 退去予定

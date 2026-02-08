@@ -1,0 +1,10 @@
+<% content_for :title, "部屋編集" %>
+
+<h1>部屋編集</h1>
+
+<%= render "form", room: @room %>
+
+<div>
+  <%= link_to "詳細に戻る", @room %> |
+  <%= link_to "一覧に戻る", rooms_path %>
+</div>

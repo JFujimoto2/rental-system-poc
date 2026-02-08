@@ -1,0 +1,39 @@
+<% content_for :title, "建物一覧" %>
+
+<p class="notice"><%= notice %></p>
+
+<h1>建物一覧</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>建物名</th>
+      <th>住所</th>
+      <th>構造</th>
+      <th>階数</th>
+      <th>築年</th>
+      <th>最寄駅</th>
+      <th>部屋数</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @buildings.each do |building| %>
+      <tr>
+        <td><%= link_to building.name, building %></td>
+        <td><%= building.address %></td>
+        <td><%= building.building_type %></td>
+        <td><%= building.floors %></td>
+        <td><%= building.built_year %></td>
+        <td><%= building.nearest_station %></td>
+        <td><%= building.rooms.size %></td>
+        <td class="actions">
+          <%= link_to "編集", edit_building_path(building) %>
+          <%= button_to "削除", building, method: :delete, class: "btn-link btn-danger", data: { turbo_confirm: "#{building.name} を削除しますか？" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "新規建物登録", new_building_path, class: "btn btn-primary" %>
