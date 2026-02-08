@@ -1,0 +1,19 @@
+<% content_for :title, "#{@user.name} - ロール変更" %>
+
+<h1><%= @user.name %> — ロール変更</h1>
+
+<%= form_with(model: @user) do |form| %>
+  <div class="form-group">
+    <%= form.label :role, "ロール" %>
+    <%= form.select :role,
+      User.roles.keys.map { |k| [I18n.t("activerecord.enums.user.role.#{k}"), k] } %>
+  </div>
+
+  <div class="form-actions">
+    <%= form.submit "更新する", class: "btn btn-primary" %>
+  </div>
+<% end %>
+
+<div class="actions-bar">
+  <%= link_to "一覧に戻る", users_path, class: "btn" %>
+</div>

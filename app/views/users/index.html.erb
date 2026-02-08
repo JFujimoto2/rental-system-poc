@@ -1,0 +1,30 @@
+<% content_for :title, "ユーザー管理" %>
+
+<p class="notice"><%= notice %></p>
+
+<h1>ユーザー管理</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>名前</th>
+      <th>メールアドレス</th>
+      <th>認証プロバイダ</th>
+      <th>ロール</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.name %></td>
+        <td><%= user.email %></td>
+        <td><%= user.provider %></td>
+        <td><%= user.role_label %></td>
+        <td class="actions">
+          <%= link_to "ロール変更", edit_user_path(user) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

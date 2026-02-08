@@ -1,0 +1,31 @@
+<% content_for :title, "ログイン" %>
+
+<div class="login-container">
+  <h1>賃貸管理システム</h1>
+  <p>ログインしてください</p>
+
+  <% if flash[:alert] %>
+    <div class="error-messages"><p><%= flash[:alert] %></p></div>
+  <% end %>
+
+  <div class="login-buttons">
+    <%= form_with url: "/auth/entra_id", method: :post, data: { turbo: false } do %>
+      <%= submit_tag "Microsoft でログイン", class: "btn btn-primary btn-login" %>
+    <% end %>
+
+    <%= form_with url: "/auth/google_oauth2", method: :post, data: { turbo: false } do %>
+      <%= submit_tag "Google でログイン", class: "btn btn-login btn-google" %>
+    <% end %>
+  </div>
+
+  <% if Rails.env.local? %>
+    <hr>
+    <h3>開発用ログイン</h3>
+    <% User.order(:role).each do |user| %>
+      <%= form_with url: login_as_path, method: :post, data: { turbo: false } do |f| %>
+        <%= f.hidden_field :user_id, value: user.id %>
+        <%= f.submit "#{user.name}（#{user.role_label}）としてログイン", class: "btn btn-dev" %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

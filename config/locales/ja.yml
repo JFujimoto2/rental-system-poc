@@ -11,6 +11,7 @@ ja:
       contract: 転貸借契約
       tenant_payment: テナント入金
       owner_payment: オーナー支払
+      user: ユーザー
     attributes:
       building:
         name: 建物名
@@ -116,6 +117,12 @@ ja:
         paid_date: 支払日
         status: 状態
         notes: 備考
+      user:
+        provider: 認証プロバイダ
+        uid: ユーザーID
+        name: 名前
+        email: メールアドレス
+        role: ロール
     enums:
       room:
         status:
@@ -154,3 +161,9 @@ ja:
         status:
           unpaid: 未払
           paid: 支払済
+      user:
+        role:
+          admin: 管理者
+          manager: マネージャー
+          operator: オペレーター
+          viewer: 閲覧者

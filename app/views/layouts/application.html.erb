@@ -24,22 +24,31 @@
   </head>
 
   <body>
-    <header class="site-header">
-      <nav class="site-nav">
-        <span class="site-title"><%= link_to "賃貸管理システム", root_path %></span>
-        <ul>
-          <li><%= link_to "建物一覧", buildings_path %></li>
-          <li><%= link_to "部屋一覧", rooms_path %></li>
-          <li><%= link_to "オーナー一覧", owners_path %></li>
-          <li><%= link_to "契約一覧", master_leases_path %></li>
-          <li><%= link_to "入居者一覧", tenants_path %></li>
-          <li><%= link_to "転貸借契約", contracts_path %></li>
-          <li><%= link_to "テナント入金", tenant_payments_path %></li>
-          <li><%= link_to "オーナー支払", owner_payments_path %></li>
-          <li><%= link_to "インポート", new_import_path %></li>
-        </ul>
-      </nav>
-    </header>
+    <% if logged_in? %>
+      <header class="site-header">
+        <nav class="site-nav">
+          <span class="site-title"><%= link_to "賃貸管理システム", root_path %></span>
+          <ul>
+            <li><%= link_to "建物一覧", buildings_path %></li>
+            <li><%= link_to "部屋一覧", rooms_path %></li>
+            <li><%= link_to "オーナー一覧", owners_path %></li>
+            <li><%= link_to "契約一覧", master_leases_path %></li>
+            <li><%= link_to "入居者一覧", tenants_path %></li>
+            <li><%= link_to "転貸借契約", contracts_path %></li>
+            <li><%= link_to "テナント入金", tenant_payments_path %></li>
+            <li><%= link_to "オーナー支払", owner_payments_path %></li>
+            <li><%= link_to "インポート", new_import_path %></li>
+            <% if current_user.can_manage_users? %>
+              <li><%= link_to "ユーザー管理", users_path %></li>
+            <% end %>
+          </ul>
+          <div class="user-info">
+            <span><%= current_user.name %>（<%= current_user.role_label %>）</span>
+            <%= button_to "ログアウト", logout_path, method: :delete, class: "btn btn-logout" %>
+          </div>
+        </nav>
+      </header>
+    <% end %>
     <main class="container">
       <%= yield %>
     </main>
