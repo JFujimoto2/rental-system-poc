@@ -71,7 +71,7 @@ gem "roo", "~> 2.10"
 gem "caxlsx", "~> 4.1"
 gem "omniauth-entra-id", "~> 3.0"
 gem "omniauth-google-oauth2", "~> 1.2"
-gem "omniauth-rails_csrf_protection", "~> 1.0"
+gem "omniauth-rails_csrf_protection", "~> 2.0"
 
 group :development, :test do
   gem "rspec-rails", "~> 8.0"
