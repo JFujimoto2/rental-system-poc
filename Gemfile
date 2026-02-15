@@ -67,7 +67,7 @@ group :test do
 end
 
 gem "rails-i18n", "~> 8.1"
-gem "roo", "~> 2.10"
+gem "roo", "~> 3.0"
 gem "caxlsx", "~> 4.1"
 gem "omniauth-entra-id", "~> 3.0"
 gem "omniauth-google-oauth2", "~> 1.2"
